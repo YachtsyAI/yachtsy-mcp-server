@@ -3,21 +3,17 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import dotenv from "dotenv";
-import { readFile } from "fs/promises";
 import OpenAI from "openai";
-import path from "path";
-import { fileURLToPath } from "url";
 import { z } from "zod";
-
-// Get package.json info
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const packageJsonPath = path.join(__dirname, "..", "package.json");
-const packageJsonContent = await readFile(packageJsonPath, "utf8");
-const packageInfo = JSON.parse(packageJsonContent) as { name: string; version: string };
 
 // Load environment variables
 dotenv.config();
+
+// Package info (hardcoded to avoid top-level await and import.meta issues)
+const packageInfo = {
+  name: "yachtsy-mcp",
+  version: "1.0.0"
+};
 
 // Check for required environment variables
 const YACHTSY_API_KEY = process.env.YACHTSY_API_KEY;
