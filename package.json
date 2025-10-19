@@ -12,7 +12,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "build": "tsc && node --input-type=module -e \"import{chmod}from'fs';chmod('dist/index.js',0o755,()=>{})\"",
     "test": "echo \"No tests specified\"",
     "start": "node dist/index.js",
     "lint": "echo \"No linting configured\"",
