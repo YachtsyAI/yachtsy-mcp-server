@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Yachtsy MCP Server — an AI-powered sailing and yacht marketplace integration built on the Model Context Protocol (MCP). Seamlessly connects 25,000+ yacht, sailboat, and marine listings with intelligent search, analytics, and chat-based maritime insights for sailors, brokers, and developers.",
   "main": "dist/index.js",
+  "module": "./src/index.ts",
   "type": "module",
   "bin": {
     "yachtsy-mcp": "dist/index.js"
