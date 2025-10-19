@@ -1,6 +1,6 @@
 # Yachtsy: MCP for Yacht Marketplace Intelligence
 
-![Yachtsy AI](https://www.yachtsy.ai/)
+Yachtsy AI
 
 The Yachtsy MCP server provides AI-powered yacht and boat marketplace intelligence by integrating with the Yachtsy Agent API. Access 25,000+ boat listings, get expert sailing advice, and find your perfect vessel within Claude Desktop, Cursor, and other popular MCP clients.
 
