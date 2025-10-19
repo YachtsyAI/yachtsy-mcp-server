@@ -1,16 +1,4 @@
-startCommand:
-  type: stdio
-  configSchema:
-    type: object
-    required:
-      - yachtsyApiKey
-    properties:
-      yachtsyApiKey:
-        type: string
-        description: Your Yachtsy API key (get one at https://www.yachtsy.ai/signup)
-  commandFunction: |
-    (config) => ({
-      command: 'node',
-      args: ['dist/index.js'],
-      env: { YACHTSY_API_KEY: config.yachtsyApiKey }
-    }) 
+runtime: "typescript"
+env:
+  NODE_ENV: "production"
+ 
