@@ -1,5 +1,7 @@
 # Yachtsy: MCP for Yacht Marketplace Intelligence
 
+[![smithery badge](https://smithery.ai/badge/@YachtsyAI/yachtsy-mcp-server)](https://smithery.ai/server/@YachtsyAI/yachtsy-mcp-server)
+
 Yachtsy AI
 
 The Yachtsy MCP server provides AI-powered yacht and boat marketplace intelligence by integrating with the Yachtsy Agent API. Access 25,000+ boat listings, get expert sailing advice, and find your perfect vessel within Claude Desktop, Cursor, and other popular MCP clients.
@@ -69,6 +71,14 @@ Before installing or running Yachtsy MCP, you need to have `npx` (which comes wi
    ```
 
 ## Installation
+
+### Installing via Smithery
+
+To install Yachtsy automatically via [Smithery](https://smithery.ai/server/@YachtsyAI/yachtsy-mcp-server):
+
+```bash
+npx -y @smithery/cli install @YachtsyAI/yachtsy-mcp-server
+```
 
 ### Running on Claude Desktop
 
