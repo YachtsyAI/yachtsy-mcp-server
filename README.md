@@ -72,6 +72,14 @@ Before installing or running Yachtsy MCP, you need to have `npx` (which comes wi
 
 ## Installation
 
+### Installing via Smithery
+
+To install Yachtsy automatically via [Smithery](https://smithery.ai/server/@YachtsyAI/yachtsy-mcp-server):
+
+```bash
+npx -y @smithery/cli install @YachtsyAI/yachtsy-mcp-server
+```
+
 ### Running on Claude Desktop
 
 To configure Yachtsy MCP for Claude Desktop:
