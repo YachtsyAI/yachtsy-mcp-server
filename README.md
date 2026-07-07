@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/yachtsyai-yachtsy-mcp-server-badge.png)](https://mseep.ai/app/yachtsyai-yachtsy-mcp-server)
+
 # Yachtsy: MCP for Yacht Marketplace Intelligence
 
 [![smithery badge](https://smithery.ai/badge/@YachtsyAI/yachtsy-mcp-server)](https://smithery.ai/server/@YachtsyAI/yachtsy-mcp-server)
