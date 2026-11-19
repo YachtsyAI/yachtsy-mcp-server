@@ -1,0 +1,32 @@
+# Yachtsy hosted MCP server. Env with sync: false is set in the Render
+# dashboard, never committed.
+services:
+  - type: web
+    name: yachtsy-mcp
+    runtime: node
+    plan: starter
+    rootDir: server
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /healthz
+    autoDeploy: false
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: YACHTSY_PUBLIC_BASE_URL
+        value: https://mcp.yachtsy.ai
+      - key: YACHTSY_OAUTH_ISSUER
+        value: https://www.yachtsy.ai
+      - key: YACHTSY_API_BASE_URL
+        value: https://api.yachtsy.ai/v1
+      # Render terminates TLS in one proxy hop; the client IP is the last
+      # X-Forwarded-For entry.
+      - key: YACHTSY_TRUST_PROXY
+        value: "true"
+      # 32-byte base64, shared with the authorization server in `web`.
+      # Unset: OAuth off, raw API keys only.
+      - key: YACHTSY_TOKEN_ENC_KEY
+        sync: false
+      # From the OpenAI plugin portal; public by design.
+      - key: YACHTSY_OPENAI_CHALLENGE_TOKEN
+        sync: false

@@ -1,0 +1,52 @@
+{
+  "name": "yachtsy-mcp",
+  "version": "1.0.0",
+  "description": "Yachtsy MCP server: boat listings, model valuations, deals and sailing answers from Yachtsy's marketplace data. Hosted (Streamable HTTP, OAuth) or local over stdio with an API key.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "./src/smithery.ts",
+  "bin": {
+    "yachtsy-mcp": "dist/stdio.js"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "keywords": ["mcp", "model-context-protocol", "yachtsy", "boat-listings", "sailboat", "yacht-marketplace", "chatgpt", "claude"],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "license": "MIT",
+  "author": "Yachtsy AI",
+  "homepage": "https://www.yachtsy.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YachtsyAI/yachtsy-mcp-server.git",
+    "directory": "server"
+  },
+  "bugs": {
+    "url": "https://github.com/YachtsyAI/yachtsy-mcp-server/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/stdio.js', '755')\"",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/index.js",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "smoke": "node scripts/smoke-http.mjs",
+    "smoke:stdio": "node scripts/smoke-stdio.mjs",
+    "lint": "biome check --indent-style=space --indent-width=2 src scripts tests",
+    "format": "biome format --write --indent-style=space --indent-width=2 src scripts tests",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm test && npm run smoke:stdio"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "jose": "^6.2.17",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3"
+  }
+}
