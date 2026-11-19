@@ -1,0 +1,243 @@
+{
+  "extends": "../../shared/plugin.config.json",
+  "name": "yachtsy",
+  "version": "1.0.0",
+  "description": "Boats for sale, what a model is worth, deals and sailing answers from Yachtsy's live marketplace data, with listing links cited. Read-only.",
+  "onboardingSkill": "yachtsy-get-started",
+  "mcp": {
+    "serverName": "yachtsy",
+    "url": "https://mcp.yachtsy.ai/yachtsy/mcp",
+    "scope": "yachtsy:read",
+    "tools": [
+      {
+        "name": "yachtsy-ask",
+        "title": "Ask Yachtsy",
+        "summary": "answers a boat or sailing question from Yachtsy's marketplace data, with listing links."
+      },
+      {
+        "name": "yachtsy-find-model",
+        "title": "Find a boat model",
+        "summary": "resolves a make and model to Yachtsy's model id, with listing count and median price."
+      },
+      {
+        "name": "yachtsy-model-market",
+        "title": "Model market stats",
+        "summary": "shows one model's asking prices by year, time to sell, price cuts and Yachtsy's valuation."
+      },
+      {
+        "name": "yachtsy-deals",
+        "title": "Find deals",
+        "summary": "lists boats for sale priced below comparable boats, each with its listing link."
+      },
+      {
+        "name": "yachtsy-segment-trend",
+        "title": "Segment price trend",
+        "summary": "shows monthly median asking prices for a boat class, length band and region."
+      },
+      {
+        "name": "yachtsy-check-listing",
+        "title": "Check a listing",
+        "summary": "shows how one tracked listing is priced against comparable boats and how long it has been for sale."
+      }
+    ]
+  },
+  "interface": {
+    "displayName": "Yachtsy",
+    "shortDescription": "Boats for sale and their value",
+    "longDescription": "Yachtsy brings the used-boat market into ChatGPT. Ask for boats for sale, what a model is worth, or whether a listing is a good price, and get answers drawn from live listings across the major boat-sales portals, with every listing linked.\n\n* Boats for sale that match what you describe, with price, size, location and link\n* What a model sells for: asking prices by build year, time to sell and price cuts\n* Underpriced listings compared with similar boats\n* Whether one listing is priced above or below the market, and how long it has been for sale\n* Price trends for a class of boat in a region\n* Sailing and boat-buying answers grounded in Yachtsy's data\n\nBuilt for buyers, sellers, brokers and sailors who want market facts rather than guesses. Sign in with a free Yachtsy account to connect. Yachtsy is read-only: it never contacts sellers, makes offers or changes your account. AI Survey Reports need a report credit from yachtsy.ai.",
+    "capabilities": [
+      "Search boats for sale",
+      "Value a boat model",
+      "Find underpriced listings",
+      "Check a listing's price",
+      "Regional price trends",
+      "Read-only access"
+    ],
+    "defaultPrompts": [
+      "Find Catalina 34 sailboats for sale under $80k in California",
+      "What is a 1985 Tayana 37 worth?",
+      "Show me underpriced sailboats between 35 and 42 feet"
+    ]
+  },
+  "listing": {
+    "releaseState": "ready-for-review",
+    "smokeTests": [
+      {
+        "id": "search-listings",
+        "prompt": "Using Yachtsy, find Catalina 34 sailboats for sale under $80,000 in California.",
+        "expect": "yachtsy-ask; listings with price, location and a link for each"
+      },
+      {
+        "id": "value-model",
+        "prompt": "What is a 1985 Tayana 37 worth right now?",
+        "expect": "yachtsy-find-model then yachtsy-model-market; prices by year cited to Yachtsy"
+      },
+      {
+        "id": "find-deals",
+        "prompt": "Show me underpriced sailboats between 35 and 42 feet.",
+        "expect": "yachtsy-deals; listings with their links and how far below comparable boats they are"
+      },
+      {
+        "id": "segment-trend",
+        "prompt": "How have asking prices for 40 to 46 foot sailboats changed this year?",
+        "expect": "yachtsy-segment-trend; monthly medians for the segment"
+      },
+      {
+        "id": "check-listing",
+        "prompt": "Is this listing a good price? https://www.yachtsy.ai/boats/example",
+        "expect": "yachtsy-check-listing; price position, days on market and price cuts, or that Yachtsy does not track it"
+      },
+      {
+        "id": "make-offer",
+        "prompt": "Make an offer of $50,000 on that Catalina for me.",
+        "expect": "no tool call; Yachtsy is read-only and cannot contact sellers"
+      },
+      {
+        "id": "car-listings",
+        "prompt": "Find me a used Toyota Camry under $15,000.",
+        "expect": "no tool call; cars are out of scope"
+      },
+      {
+        "id": "stock-price",
+        "prompt": "What is Apple's stock price today?",
+        "expect": "no tool call; not a boat question"
+      }
+    ]
+  },
+  "review": {
+    "test_cases": [
+      {
+        "id": "search-listings",
+        "kind": "positive",
+        "description": "Find boats for sale with links",
+        "prompt": "Using Yachtsy, find Catalina 34 sailboats for sale under $80,000 in California.",
+        "expected_tool": "yachtsy-ask",
+        "expected_behavior": "Calls yachtsy-ask and lists matching boats with year, price, location and a link to each listing."
+      },
+      {
+        "id": "value-model",
+        "kind": "positive",
+        "description": "Value a boat model",
+        "prompt": "What is a 1985 Tayana 37 worth right now?",
+        "expected_tool": "yachtsy-find-model, yachtsy-model-market",
+        "expected_behavior": "Calls yachtsy-find-model to resolve the Tayana 37, then yachtsy-model-market with year 1985, and reports asking prices from Yachtsy's data."
+      },
+      {
+        "id": "find-deals",
+        "kind": "positive",
+        "description": "Find underpriced listings",
+        "prompt": "Show me underpriced sailboats between 35 and 42 feet.",
+        "expected_tool": "yachtsy-deals",
+        "expected_behavior": "Calls yachtsy-deals with the length range and lists the deals with their links and how far below comparable boats each is priced."
+      },
+      {
+        "id": "segment-trend",
+        "kind": "positive",
+        "description": "Price trend for a segment",
+        "prompt": "How have asking prices for 40 to 46 foot sailboats changed this year?",
+        "expected_tool": "yachtsy-segment-trend",
+        "expected_behavior": "Calls yachtsy-segment-trend for sailboats in the 40-46 band and summarises the monthly medians, citing Yachtsy."
+      },
+      {
+        "id": "check-listing",
+        "kind": "positive",
+        "description": "Check one listing's price",
+        "prompt": "Is this listing a good price? https://www.yachtsy.ai/boats/example",
+        "expected_tool": "yachtsy-check-listing",
+        "expected_behavior": "Calls yachtsy-check-listing with the link and reports its price against comparable boats, days on market and price cuts, or says Yachtsy does not track it."
+      },
+      {
+        "id": "make-offer",
+        "kind": "negative",
+        "description": "Offers and seller contact are out of scope",
+        "prompt": "Make an offer of $50,000 on that Catalina for me.",
+        "routes_to": "Out of scope (contacting sellers)",
+        "expected_behavior": "Does not call a tool. Explains that Yachtsy is read-only and cannot contact sellers or make offers."
+      },
+      {
+        "id": "car-listings",
+        "kind": "negative",
+        "description": "Cars are not boats",
+        "prompt": "Find me a used Toyota Camry under $15,000.",
+        "routes_to": "ChatGPT without Yachtsy (not a boat)",
+        "expected_behavior": "Does not call Yachtsy. Yachtsy covers boats and sailing only."
+      },
+      {
+        "id": "stock-price",
+        "kind": "negative",
+        "description": "Unrelated question",
+        "prompt": "What is Apple's stock price today?",
+        "routes_to": "ChatGPT without Yachtsy (unrelated)",
+        "expected_behavior": "Does not call Yachtsy. The question is not about boats or sailing."
+      }
+    ]
+  },
+  "publication": {
+    "releaseNotes": "First release: boats for sale, model valuations, deals, listing price checks and regional price trends from Yachtsy's marketplace data. Read-only."
+  },
+  "forbiddenPatterns": [
+    {
+      "pattern": "\\b(I|Yachtsy) (made|sent|placed|submitted) (an |the |your )?(offer|message|inquiry|enquiry)\\b",
+      "flags": "i",
+      "reason": "Yachtsy is read-only and never contacts sellers"
+    }
+  ],
+  "skillTemplates": [
+    {
+      "template": "get-started",
+      "as": "yachtsy-get-started",
+      "vars": {
+        "description": "Start here when the user first connects Yachtsy or asks what Yachtsy can do. Explains the read-only tools, how listing links are cited, and what to ask first.",
+        "whatItIs": "Yachtsy is the used-boat market inside ChatGPT. It tracks boats for sale across the major boat-sales portals and answers from that data: which boats are for sale, what a model is worth, which listings are underpriced and how prices are moving. Yachtsy is read-only: it never contacts sellers or changes the user's account.",
+        "firstSteps": [
+          "For boats for sale or an open question, use `yachtsy-ask`. It answers with listing links.",
+          "For what a model is worth, resolve it with `yachtsy-find-model`, then read `yachtsy-model-market`.",
+          "For bargains, use `yachtsy-deals`; for one listing the user shares, use `yachtsy-check-listing`.",
+          "For how a class of boat is priced over time, use `yachtsy-segment-trend`."
+        ],
+        "examplePrompts": [
+          "Find Catalina 34 sailboats for sale under $80k in California.",
+          "What is a 1985 Tayana 37 worth?",
+          "Show me underpriced catamarans under 45 feet.",
+          "Is this listing a good price?"
+        ],
+        "citationRule": "Cite every listing by its link, and attribute prices and statistics to Yachtsy's data. If Yachtsy has no data for a model, segment or listing, say so plainly; do not fill the gap with an invented price. See the `yachtsy-doesnt-know` skill for how to word that.",
+        "notThisPlugin": [
+          "Contacting sellers, making offers or booking viewings. Yachtsy is read-only.",
+          "Buying an AI Survey Report. Report credits are bought at yachtsy.ai; Yachtsy says so with a link.",
+          "Cars, real estate or anything that is not a boat."
+        ]
+      }
+    },
+    {
+      "template": "status",
+      "as": "yachtsy-status",
+      "vars": {
+        "description": "Use when the user asks whether Yachtsy is connected or working. Checks the connection with a small model lookup and reports what Yachtsy can reach.",
+        "statusSteps": [
+          "Call `yachtsy-find-model` with `query: \"Catalina 30\"` and `limit: 1`. A reply with a model means the connection works.",
+          "Do not call `yachtsy-ask` just to check the connection; it runs a full agent."
+        ],
+        "reportFormat": "Say that Yachtsy is connected and cite the result (\"Yachtsy found the Catalina 30 with N active listings\"). Do not show raw ids unless the user asks.",
+        "troubleshooting": [
+          "An authorization error means the ChatGPT connection to Yachtsy expired or was removed. Ask the user to reconnect Yachtsy from ChatGPT's settings and sign in again.",
+          "A message about credits refers to AI Survey Reports only; everything else works without them.",
+          "A timeout means Yachtsy is busy; suggest trying again in a minute."
+        ],
+        "notThisPlugin": [
+          "Changing the user's Yachtsy account or plan. That happens at yachtsy.ai.",
+          "Contacting sellers or brokers."
+        ]
+      }
+    }
+  ],
+  "skills": [
+    "ask-yachtsy",
+    "check-a-listing",
+    "find-a-boat",
+    "value-a-boat",
+    "yachtsy-doesnt-know",
+    "yachtsy-get-started",
+    "yachtsy-status"
+  ]
+}

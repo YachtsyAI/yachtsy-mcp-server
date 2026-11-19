@@ -1,0 +1,83 @@
+{
+  "$comment": "Parent configuration for every Yachtsy profile. Profiles extend it; objects merge, scalars and arrays are replaced, forbiddenPatterns accumulate.",
+  "author": {
+    "name": "Yachtsy AI",
+    "url": "https://www.yachtsy.ai"
+  },
+  "homepage": "https://www.yachtsy.ai",
+  "license": "MIT",
+  "interface": {
+    "developerName": "Yachtsy AI",
+    "category": "Shopping",
+    "brandColor": "#2563EB",
+    "brandColorDark": "#60A5FA",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
+    "websiteURL": "https://www.yachtsy.ai",
+    "supportURL": "https://www.yachtsy.ai/support",
+    "privacyPolicyURL": "https://www.yachtsy.ai/privacy",
+    "termsOfServiceURL": "https://www.yachtsy.ai/terms"
+  },
+  "publication": {
+    "countries": [
+      "ALL"
+    ]
+  },
+  "catalog": {
+    "tools": [
+      "yachtsy-ask",
+      "yachtsy-find-model",
+      "yachtsy-model-market",
+      "yachtsy-deals",
+      "yachtsy-segment-trend",
+      "yachtsy-check-listing"
+    ],
+    "canonicalTools": [
+      "get_listings_data",
+      "get_tide_data",
+      "get_survey_data",
+      "get_market_stats",
+      "yachtsy-router-agent",
+      "yachtsy-planner-agent"
+    ],
+    "ownedHosts": [
+      "yachtsy.ai",
+      "www.yachtsy.ai",
+      "mcp.yachtsy.ai"
+    ]
+  },
+  "forbiddenPatterns": [
+    {
+      "pattern": "\\bnpx\\b",
+      "reason": "local-install leftover; ChatGPT connects over OAuth, nothing is installed"
+    },
+    {
+      "pattern": "\\bclaude[ -]?(code|desktop)\\b",
+      "flags": "i",
+      "reason": "setup text for another client"
+    },
+    {
+      "pattern": "YACHTSY_API_KEY|--api-key|\\bsk-\\.\\.\\.",
+      "reason": "API keys are never handled in ChatGPT; auth is OAuth"
+    },
+    {
+      "pattern": "\\bOctagon\\b",
+      "flags": "i",
+      "reason": "template leftover from the Octagon MCP server"
+    },
+    {
+      "pattern": "\\b(OpenRouter|Firestore|Typesense|Snowflake|Modal|Exa)\\b",
+      "reason": "internal implementation detail"
+    },
+    {
+      "pattern": "\\b(feel free to|it is fine to|it's fine to|you may|you can)\\s+(guess|make (it|something) up|estimate without data)\\b",
+      "flags": "i",
+      "reason": "prices and listings come from Yachtsy's data; never invent them"
+    },
+    {
+      "pattern": "\\bbest guess\\b",
+      "flags": "i",
+      "reason": "prices and listings come from Yachtsy's data; never invent them"
+    }
+  ]
+}
