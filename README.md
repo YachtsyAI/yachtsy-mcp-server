@@ -72,7 +72,7 @@ cd server && npm ci && npm test && npm run lint && npm run smoke && npm run smok
 
 Probe a deployment: `SMOKE_BASE_URL=https://mcp.yachtsy.ai SMOKE_API_KEY=sk-… npm run smoke`.
 
-[`server/README.md`](server/README.md) has the layout, configuration and endpoints. [`render.yaml`](render.yaml) describes the service.
+[`server/README.md`](server/README.md) has the layout, configuration and endpoints. [`plugins/`](plugins/README.md) packages the server for the ChatGPT directory (`cd plugins && npm ci && npm test && npm run build -- --profile all`). [`render.yaml`](render.yaml) describes the service.
 
 ## License
 
