@@ -1,0 +1,49 @@
+name: Publish to npm
+
+# Publishes yachtsy-mcp when a push to main carries a server/package.json
+# version that is not on the registry yet. Bump the version in the same PR.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish yachtsy-mcp
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write # npm provenance (and trusted publishing once configured)
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: Check the version is new
+        id: version
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "$NAME" != "yachtsy-mcp" ]; then echo "Unexpected package name: $NAME"; exit 1; fi
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "$NAME@$VERSION is already published; skipping."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+      # prepublishOnly runs lint, typecheck, the tests and the stdio smoke.
+      - name: Publish with provenance
+        if: steps.version.outputs.published == 'false'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
