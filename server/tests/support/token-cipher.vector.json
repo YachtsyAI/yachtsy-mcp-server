@@ -1,0 +1,6 @@
+{
+  "$comment": "Shared by web server/oauth/TokenCipher.ts and yachtsy-mcp server/src/auth/TokenCipher.ts. Test-only key; never a real credential.",
+  "key": "BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=",
+  "plaintext": "sk-0123456789abcdef0123456789abcdef0123456789abcdef",
+  "sealed": "AQEBAQEBAQEBAQEB.BYqkh6GN3zrk4usZSVYSUsyecsQppQgnbQd0Wl_VVNim126ArSG2tGtEfzP4H4z66n6PNDKptnwzW9kpd9z1Ct8ZwQ"
+}
