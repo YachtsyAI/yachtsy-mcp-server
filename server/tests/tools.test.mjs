@@ -14,6 +14,7 @@ import {
   PLAIN_ANSWER,
   SURVEY_PAYWALL_ANSWER,
 } from "./support/fixtures.mjs";
+import { listingsPayload } from "./support/listings.mjs";
 import { json, restoreFetch, stubFetch } from "./support/stubApi.mjs";
 
 const API_BASE = "https://api.example.test/v1";
@@ -113,7 +114,7 @@ test("yachtsy-ask turns a listings payload into cited prose", async () => {
   );
   assert.match(
     out,
-    /2 of 12 listings for "Catalina 34 under \$80k in California"/,
+    /Found 12 listings for "Catalina 34 under \$80k in California"/,
   );
   assert.match(
     out,
@@ -121,6 +122,37 @@ test("yachtsy-ask turns a listings payload into cited prose", async () => {
   );
   assert.match(out, /https:\/\/www\.example-portal\.test\/boat\/2/);
   assert.doesNotMatch(out, /yachtsy_agent/);
+});
+
+test("yachtsy-ask returns a listings digest as structured content, sized by maxListings", async () => {
+  stubFetch(() =>
+    json(
+      completion(
+        `Searching listings…\n\n${JSON.stringify(listingsPayload(205))}`,
+      ),
+    ),
+  );
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "Catalina 30s under $20k", maxListings: 5 },
+  });
+  assert.equal(result.structuredContent.kind, "listings");
+  assert.equal(result.structuredContent.total, 205);
+  assert.equal(result.structuredContent.listings.length, 5);
+  assert.equal(text(result).match(/^- \*\*/gm).length, 5);
+  assert.doesNotMatch(text(result), /Sources:/);
+});
+
+test("yachtsy-ask refuses maxListings outside 1–25", async () => {
+  const calls = stubFetch(() => json(completion(PLAIN_ANSWER)));
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "boats", maxListings: 26 },
+  });
+  assert.equal(result.isError, true);
+  assert.equal(calls.length, 0);
 });
 
 test("yachtsy-ask relays the survey paywall as text with the pricing link", async () => {

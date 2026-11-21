@@ -1,4 +1,5 @@
 import { normalizeApiBaseUrl } from "../yachtsy/YachtsyApiConfig.js";
+import { YachtsySite } from "../yachtsy/YachtsySite.js";
 
 export const DEFAULT_PUBLIC_BASE_URL = "https://mcp.yachtsy.ai";
 export const DEFAULT_OAUTH_ISSUER = "https://www.yachtsy.ai";
@@ -20,6 +21,7 @@ const IP_BUDGET_MULTIPLIER = 5;
  * | YACHTSY_JWKS_URL                | override for the issuer's JWKS URL                         |
  * | YACHTSY_TOKEN_ENC_KEY           | 32-byte base64 key for the `ek` claim; unset = OAuth off   |
  * | YACHTSY_API_BASE_URL            | Yachtsy API base URL (…/v1)                                |
+ * | YACHTSY_SITE_URL                | where printed yachtsy.ai links point (default production)  |
  * | YACHTSY_REQUESTS_PER_MINUTE     | per-caller request budget (default 120; per IP ×5)         |
  * | YACHTSY_TRUST_PROXY             | "true" behind one proxy (Render): client IP from X-Forwarded-For |
  * | YACHTSY_OPENAI_CHALLENGE_TOKEN  | OpenAI plugin portal domain-verification token (public)    |
@@ -36,6 +38,7 @@ export class HttpConfig {
     readonly requestsPerMinute: number,
     readonly trustProxy: boolean,
     readonly openaiChallengeToken: string | undefined,
+    readonly site: YachtsySite,
   ) {}
 
   static fromEnv(env: NodeJS.ProcessEnv): HttpConfig {
@@ -55,6 +58,7 @@ export class HttpConfig {
       ),
       env.YACHTSY_TRUST_PROXY?.trim().toLowerCase() === "true",
       env.YACHTSY_OPENAI_CHALLENGE_TOKEN?.trim() || undefined,
+      YachtsySite.of(env.YACHTSY_SITE_URL),
     );
   }
 

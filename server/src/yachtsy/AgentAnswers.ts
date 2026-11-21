@@ -1,4 +1,8 @@
-import { AnswerPresenter, type PresentedAnswer } from "./AnswerPresenter.js";
+import {
+  AnswerPresenter,
+  type PresentationContext,
+  type PresentedAnswer,
+} from "./AnswerPresenter.js";
 import type { YachtsyApiClient } from "./YachtsyApiClient.js";
 
 /** Deep research and surveys take minutes; a chat client will not wait longer. */
@@ -22,7 +26,11 @@ export class AgentAnswers {
 
   constructor(private readonly client: YachtsyApiClient) {}
 
-  async ask(agentId: string, prompt: string): Promise<PresentedAnswer> {
+  async ask(
+    agentId: string,
+    prompt: string,
+    presentation?: PresentationContext,
+  ): Promise<PresentedAnswer> {
     const body = await this.client.request<ChatCompletion>(
       "/chat/completions",
       {
@@ -46,6 +54,6 @@ export class AgentAnswers {
     if (typeof content !== "string" || !content.trim()) {
       throw new Error("Yachtsy returned an empty answer.");
     }
-    return this.presenter.present(content);
+    return this.presenter.present(content, presentation);
   }
 }

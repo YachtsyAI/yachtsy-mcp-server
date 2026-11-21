@@ -11,6 +11,7 @@ import {
 } from "./yachtsy/AgentCatalog.js";
 import { YachtsyApi } from "./yachtsy/YachtsyApi.js";
 import type { YachtsyApiConfig } from "./yachtsy/YachtsyApiConfig.js";
+import { YachtsySite } from "./yachtsy/YachtsySite.js";
 
 export type YachtsyMcpServerOptions = {
   readonly preset: ToolPreset;
@@ -21,6 +22,8 @@ export type YachtsyMcpServerOptions = {
   readonly packageInfo: PackageInfo;
   /** Safe-to-log label for the caller, e.g. `grant:<id>`. */
   readonly principal: string;
+  /** Where printed yachtsy.ai links point; production when omitted. */
+  readonly site?: YachtsySite;
   /** Aborted when the HTTP request that owns this server closes. */
   readonly signal?: AbortSignal;
 };
@@ -46,6 +49,7 @@ export function createYachtsyMcpServer(
   const context: ToolContext = {
     api: new YachtsyApi(options.api, packageInfo.userAgent, options.signal),
     agents: new AgentCatalog(options.agents),
+    site: options.site ?? YachtsySite.production,
     log: new ToolLogger(server, options.principal),
   };
   for (const tool of preset.tools) register(server, tool, context);

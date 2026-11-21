@@ -9,9 +9,12 @@ import type { ToolContext } from "./ToolContext.js";
 export type InputShape = Record<string, z.ZodType>;
 export type ToolArgs<Shape extends InputShape> = z.infer<z.ZodObject<Shape>>;
 
-/** What a tool produced: text, or a JSON payload plus its structured form. */
+/**
+ * What a tool produced: text (optionally with its data), or a JSON payload
+ * plus its structured form.
+ */
 export type ToolOutput =
-  | { readonly text: string }
+  | { readonly text: string; readonly structured?: Record<string, unknown> }
   | { readonly json: unknown; readonly structured: Record<string, unknown> };
 
 /**
@@ -70,7 +73,10 @@ export abstract class YachtsyTool<Shape extends InputShape = InputShape> {
 
   private static result(output: ToolOutput): CallToolResult {
     if ("text" in output) {
-      return { content: [{ type: "text", text: output.text }] };
+      const content = [{ type: "text" as const, text: output.text }];
+      return output.structured
+        ? { content, structuredContent: output.structured }
+        : { content };
     }
     return {
       content: [{ type: "text", text: JSON.stringify(output.json, null, 2) }],
