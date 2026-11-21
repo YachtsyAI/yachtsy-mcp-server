@@ -1,5 +1,5 @@
 import { YachtsyApiError } from "../yachtsy/apiErrors.js";
-import type { MarketQuery } from "../yachtsy/YachtsyApi.js";
+import type { MarketQuery, YachtsyApi } from "../yachtsy/YachtsyApi.js";
 import type { ToolContext } from "./ToolContext.js";
 import {
   type InputShape,
@@ -19,6 +19,9 @@ export type MarketRequest = {
  * inputs and how inputs map to the request; the call, the "not covered"
  * answer for a 404, and the structured result are here once.
  *
+ * The JSON goes out compact, once as text and once as `structuredContent`.
+ * A subclass may lead it with a note, e.g. what to try after an empty result.
+ *
  * Response shapes are owned by the API's pydantic models
  * (`api/v1/market_intel/models.py`) and passed through as returned. No
  * `outputSchema` is declared on purpose: a TypeScript copy of those models
@@ -35,16 +38,30 @@ export abstract class MarketTool<
     args: ToolArgs<Shape>,
     { api }: ToolContext,
   ): Promise<ToolOutput> {
-    const { path, query } = this.request(args);
     try {
-      const json = await api.market<unknown>(path, query);
-      return { json, structured: MarketTool.structured(json) };
+      const json = await this.read(args, api);
+      const structured = MarketTool.structured(json);
+      const note = this.note(json, args);
+      return note
+        ? { text: `${note}\n\n${JSON.stringify(json)}`, structured }
+        : { json, structured };
     } catch (error) {
       if (error instanceof YachtsyApiError && error.status === 404) {
         return { text: `${this.notCovered} (${error.message})` };
       }
       throw error;
     }
+  }
+
+  /** One read of `request(args)`; a subclass may read several. */
+  protected read(args: ToolArgs<Shape>, api: YachtsyApi): Promise<unknown> {
+    const { path, query } = this.request(args);
+    return api.market<unknown>(path, query);
+  }
+
+  /** A line to lead the result with, or null. */
+  protected note(_json: unknown, _args: ToolArgs<Shape>): string | null {
+    return null;
   }
 
   /** structuredContent must be an object; a bare list is wrapped. */

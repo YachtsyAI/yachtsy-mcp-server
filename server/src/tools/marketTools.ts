@@ -1,12 +1,28 @@
 import { z } from "zod";
 
+import {
+  KNOWN_CLASSES,
+  parseBoatClass,
+  SEGMENT_CLASSES,
+} from "../market/BoatClass.js";
+import {
+  type LengthBand,
+  lengthBandFor,
+  lengthBandSchema,
+} from "../market/LengthBand.js";
+import { REGIONS, regionSchema } from "../market/Region.js";
+import { YachtsyApiError } from "../yachtsy/apiErrors.js";
+import type { YachtsyApi } from "../yachtsy/YachtsyApi.js";
 import { type MarketRequest, MarketTool } from "./MarketTool.js";
 import type { ToolArgs } from "./YachtsyTool.js";
 
 /*
  * The five market-intelligence tools. Each is wording, inputs and a request
- * mapping; the behaviour lives in MarketTool.
+ * mapping; the behaviour lives in MarketTool. Class, region and length
+ * words go through src/market, which speaks the API's exact vocabulary.
  */
+
+const CLASS_LIST = KNOWN_CLASSES.join(", ");
 
 const findModelInput = {
   query: z
@@ -82,7 +98,12 @@ const dealsInput = {
   boatClass: z
     .string()
     .optional()
-    .describe("Optional boat class, e.g. 'sailboat' or 'catamaran'."),
+    .describe(
+      `Optional boat class: ${CLASS_LIST}. Every listing is a sailboat, so omit it for all classes.`,
+    ),
+  region: regionSchema
+    .optional()
+    .describe(`Optional region. ${regionSchema.description}`),
   model: z
     .string()
     .optional()
@@ -125,10 +146,12 @@ export class DealsTool extends MarketTool<typeof dealsInput> {
   protected readonly notCovered = "No deals match.";
 
   protected request(args: ToolArgs<typeof dealsInput>): MarketRequest {
+    const boatClass = parseBoatClass(args.boatClass);
     return {
       path: "deals",
       query: {
-        class: args.boatClass?.trim() || undefined,
+        class: boatClass.kind === "class" ? boatClass.deals : undefined,
+        region: args.region,
         model: args.model?.trim() || undefined,
         min_length: args.minLengthFt,
         max_length: args.maxLengthFt,
@@ -137,21 +160,47 @@ export class DealsTool extends MarketTool<typeof dealsInput> {
       },
     };
   }
+
+  /** The API matches filters exactly, so an empty page says what exists. */
+  protected note(
+    json: unknown,
+    args: ToolArgs<typeof dealsInput>,
+  ): string | null {
+    const total = (json as { total?: unknown } | null)?.total;
+    const { boatClass, region, limit: _limit, ...rest } = args;
+    const filtered =
+      parseBoatClass(boatClass).kind === "class" ||
+      region !== undefined ||
+      Object.values(rest).some((value) => value !== undefined);
+    if (total !== 0 || !filtered) return null;
+    return [
+      "No deals match these filters; Yachtsy matches class, region and model exactly.",
+      `Classes: ${CLASS_LIST}. Regions: ${Object.keys(REGIONS).join(", ")}.`,
+      "Drop or widen a filter and try again.",
+    ].join(" ");
+  }
 }
 
 const segmentTrendInput = {
-  boatClass: z.string().min(1).describe("Boat class, e.g. 'sailboat'."),
-  lengthBand: z
+  boatClass: z
     .string()
-    .min(1)
-    .describe("Length band in feet, e.g. '33-39' or '40-46'."),
-  region: z
-    .string()
-    .min(1)
+    .optional()
     .describe(
-      "Region, as Yachtsy names it (a not-found answer means try another).",
+      `Optional boat class: ${CLASS_LIST}. Omit it (every listing is a sailboat) to get each class that has data.`,
     ),
+  lengthBand: lengthBandSchema
+    .optional()
+    .describe(`${lengthBandSchema.description} Give this or lengthFt.`),
+  lengthFt: z
+    .number()
+    .positive()
+    .max(500)
+    .optional()
+    .describe("Boat length in feet, instead of lengthBand."),
+  region: regionSchema,
 };
+
+type SegmentArgs = ToolArgs<typeof segmentTrendInput>;
 
 /** `yachtsy-segment-trend`: monthly medians for a class × length × region. */
 export class SegmentTrendTool extends MarketTool<typeof segmentTrendInput> {
@@ -160,21 +209,63 @@ export class SegmentTrendTool extends MarketTool<typeof segmentTrendInput> {
   readonly description = [
     "Returns monthly median asking prices for a boat segment: class × length band × region.",
     "",
-    "Use it for 'how have prices for 40-foot sailboats changed' questions, or when a single model has too few listings.",
+    "Use it for 'how have prices for 40-foot sailboats on the US East Coast changed' questions, or when a single model has too few listings.",
+    "Without a class it returns one trend per class that has data. Map a place to its region id, e.g. Florida → us-east-coast.",
   ].join("\n");
   readonly inputSchema = segmentTrendInput;
   protected readonly failure = "Reading the segment trend failed.";
   protected readonly notCovered = "Yachtsy has no data for that segment.";
 
-  protected request(args: ToolArgs<typeof segmentTrendInput>): MarketRequest {
+  protected request(args: SegmentArgs): MarketRequest {
+    const boatClass = parseBoatClass(args.boatClass);
+    return SegmentTrendTool.path(
+      boatClass.kind === "class" ? boatClass.segment : SEGMENT_CLASSES[0],
+      args,
+    );
+  }
+
+  /** A named class reads one segment; no class reads each, in parallel. */
+  protected async read(args: SegmentArgs, api: YachtsyApi): Promise<unknown> {
+    if (parseBoatClass(args.boatClass).kind === "class") {
+      return super.read(args, api);
+    }
+    const found = await Promise.all(
+      SEGMENT_CLASSES.map((boatClass) =>
+        api
+          .market<unknown>(SegmentTrendTool.path(boatClass, args).path)
+          .catch((error) => {
+            if (error instanceof YachtsyApiError && error.status === 404) {
+              return null;
+            }
+            throw error;
+          }),
+      ),
+    );
+    const segments = found.filter((segment) => segment !== null);
+    if (!segments.length) {
+      throw new YachtsyApiError(
+        404,
+        `no ${SegmentTrendTool.band(args)} segment in ${args.region} for ${SEGMENT_CLASSES.join(", ")}`,
+      );
+    }
+    return { segments };
+  }
+
+  private static path(boatClass: string, args: SegmentArgs): MarketRequest {
     return {
       path: [
         "segments",
-        ...[args.boatClass, args.lengthBand, args.region].map(
+        ...[boatClass, SegmentTrendTool.band(args), args.region].map(
           MarketTool.segment,
         ),
       ].join("/"),
     };
+  }
+
+  private static band(args: SegmentArgs): LengthBand {
+    if (args.lengthBand) return args.lengthBand;
+    if (args.lengthFt !== undefined) return lengthBandFor(args.lengthFt);
+    throw new Error("Give lengthBand or lengthFt.");
   }
 }
 

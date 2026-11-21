@@ -43,8 +43,8 @@ All six only read. None writes to your account.
 | `yachtsy-ask` | Answers any boat or sailing question through Yachtsy's agents (listings, valuations, specs, buying advice, tides), citing listing links. Listing searches show the 10 highest-priced matches with market badges and a summary of the rest |
 | `yachtsy-find-model` | Resolves "Catalina 30" to Yachtsy's canonical model, with listing count and median price |
 | `yachtsy-model-market` | One model's market: prices by year, time to sell, price cuts, Yachtsy's valuation |
-| `yachtsy-deals` | Listings priced below comparable boats |
-| `yachtsy-segment-trend` | Monthly median prices for a class × length band × region |
+| `yachtsy-deals` | Listings priced below comparable boats, by class, region, length, price or model |
+| `yachtsy-segment-trend` | Monthly median prices for a length band × region, per class or for every class with data |
 | `yachtsy-check-listing` | Price position and negotiation signals for one listing link Yachtsy tracks |
 
 Signed-up accounts get the Yachtsy Agent without limits; AI Survey Reports need a report credit, and the tool says so with a link instead of answering.

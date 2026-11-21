@@ -9,7 +9,7 @@ description: Say what a boat model is worth from Yachtsy's market data, with yac
 
 1. Resolve the model: call `yachtsy-find-model` with the make and model the user typed. If several models match, ask which one, or pick the one with the most active listings and say so.
 2. Read its market: call `yachtsy-model-market` with that model's `idoctopus` as `modelId`, and `year` when the user gave a build year.
-3. If the model has few listings, use the segment benchmark Yachtsy points to: call `yachtsy-segment-trend` with the boat class, length band (for example `40-46`) and region.
+3. If the model has few listings, use the segment benchmark Yachtsy points to: call `yachtsy-segment-trend` with the boat's length as `lengthFt` (or a band such as `40-46`) and a region id (Florida is `us-east-coast`). Omit `boatClass` unless Yachtsy named one: every listing is a sailboat, and without a class you get each class that has data.
 
 ## What to report
 

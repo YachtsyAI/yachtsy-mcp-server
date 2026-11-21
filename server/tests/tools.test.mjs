@@ -267,25 +267,29 @@ test("market tools map inputs to the API and return structured content", async (
   const dealCalls = stubFetch(() => json({ items: [], total: 0 }));
   await client.callTool({
     name: "yachtsy-deals",
-    arguments: { boatClass: "sailboat", maxPrice: 80000 },
+    arguments: {
+      boatClass: "Racer Cruiser",
+      region: "us-gulf",
+      maxPrice: 80000,
+    },
   });
   assert.equal(
     dealCalls.at(-1).url.href,
-    `${API_BASE}/market/deals?class=sailboat&max_price=80000&limit=25`,
+    `${API_BASE}/market/deals?class=racer%2Fcruiser&region=us-gulf&max_price=80000&limit=25`,
   );
 
   const segCalls = stubFetch(() => json({ points: [] }));
   await client.callTool({
     name: "yachtsy-segment-trend",
     arguments: {
-      boatClass: "sail boat",
+      boatClass: "racer/cruiser",
       lengthBand: "33-39",
-      region: "US/West",
+      region: "us-west-coast",
     },
   });
   assert.equal(
     segCalls.at(-1).url.pathname,
-    "/v1/market/segments/sail%20boat/33-39/US%2FWest",
+    "/v1/market/segments/racercruiser/33-39/us-west-coast",
   );
 
   const listingCalls = stubFetch(() => json({ listing_url: "x" }));
@@ -314,13 +318,105 @@ test("a 404 from a market route is an answer, not an error", async () => {
   const client = await connect();
   const result = await client.callTool({
     name: "yachtsy-segment-trend",
-    arguments: { boatClass: "sailboat", lengthBand: "33-39", region: "Mars" },
+    arguments: { boatClass: "cruiser", lengthBand: "33-39", region: "asia" },
   });
   assert.equal(result.isError, undefined);
   assert.match(
     text(result),
     /Yachtsy has no data for that segment\. \(Yachtsy API returned 404: Segment not found\)/,
   );
+});
+
+test("deals: 'sailboat' is no class filter, and an empty filtered page says what exists", async () => {
+  const calls = stubFetch(() => json({ items: [], total: 0 }));
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-deals",
+    arguments: { boatClass: "sailboat", region: "caribbean" },
+  });
+  assert.equal(calls.at(-1).url.searchParams.get("class"), null);
+  assert.equal(calls.at(-1).url.searchParams.get("region"), "caribbean");
+  assert.match(text(result), /^No deals match these filters/);
+  assert.match(
+    text(result),
+    /Classes: cruiser, racer\/cruiser, catamaran, daysailer\./,
+  );
+  assert.match(text(result), /us-east-coast, us-gulf/);
+  assert.deepEqual(result.structuredContent, { items: [], total: 0 });
+
+  stubFetch(() => json({ items: [], total: 0 }));
+  const unfiltered = await client.callTool({
+    name: "yachtsy-deals",
+    arguments: {},
+  });
+  assert.equal(text(unfiltered), '{"items":[],"total":0}');
+});
+
+test("deals refuses a region Yachtsy does not have", async () => {
+  const calls = stubFetch(() => json({ items: [], total: 0 }));
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-deals",
+    arguments: { region: "Florida" },
+  });
+  assert.equal(result.isError, true);
+  assert.equal(calls.length, 0);
+});
+
+test("segment trend with no class reads each class and keeps those with data", async () => {
+  const calls = stubFetch(({ url }) => {
+    const boatClass = url.pathname.split("/")[4];
+    return ["cruiser", "racercruiser"].includes(boatClass)
+      ? json({
+          boat_class: boatClass,
+          length_band: "40-46",
+          region: "us-east-coast",
+          points: [],
+        })
+      : json({ detail: "Segment not found" }, 404);
+  });
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-segment-trend",
+    arguments: {
+      boatClass: "sailboats",
+      lengthFt: 42,
+      region: "us-east-coast",
+    },
+  });
+  assert.deepEqual(calls.map((call) => call.url.pathname).sort(), [
+    "/v1/market/segments/catamaran/40-46/us-east-coast",
+    "/v1/market/segments/cruiser/40-46/us-east-coast",
+    "/v1/market/segments/daysailer/40-46/us-east-coast",
+    "/v1/market/segments/racercruiser/40-46/us-east-coast",
+  ]);
+  assert.deepEqual(
+    result.structuredContent.segments.map((s) => s.boat_class),
+    ["cruiser", "racercruiser"],
+  );
+});
+
+test("segment trend: no class with data is not covered; no length is an error", async () => {
+  stubFetch(() => json({ detail: "Segment not found" }, 404));
+  const client = await connect();
+  const none = await client.callTool({
+    name: "yachtsy-segment-trend",
+    arguments: { lengthBand: "56-plus", region: "oceania" },
+  });
+  assert.equal(none.isError, undefined);
+  assert.match(
+    text(none),
+    /^Yachtsy has no data for that segment\. \(no 56-plus segment in oceania/,
+  );
+
+  const calls = stubFetch(() => json({}));
+  const noLength = await client.callTool({
+    name: "yachtsy-segment-trend",
+    arguments: { region: "oceania" },
+  });
+  assert.equal(noLength.isError, true);
+  assert.match(text(noLength), /Give lengthBand or lengthFt/);
+  assert.equal(calls.length, 0);
 });
 
 test("check-listing refuses non-https links before calling the API", async () => {
