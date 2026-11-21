@@ -40,7 +40,7 @@ All six only read. None writes to your account.
 
 | Tool | What it does |
 |---|---|
-| `yachtsy-ask` | Answers any boat or sailing question through Yachtsy's agents (listings, valuations, specs, buying advice, tides), citing listing links |
+| `yachtsy-ask` | Answers any boat or sailing question through Yachtsy's agents (listings, valuations, specs, buying advice, tides), citing listing links. Listing searches show the 10 highest-priced matches with market badges and a summary of the rest |
 | `yachtsy-find-model` | Resolves "Catalina 30" to Yachtsy's canonical model, with listing count and median price |
 | `yachtsy-model-market` | One model's market: prices by year, time to sell, price cuts, Yachtsy's valuation |
 | `yachtsy-deals` | Listings priced below comparable boats |

@@ -8,6 +8,7 @@ import type { Credential } from "../auth/Credential.js";
 import type { PackageInfo } from "../PackageInfo.js";
 import type { ToolPreset } from "../presets/ToolPreset.js";
 import { createYachtsyMcpServer } from "../YachtsyMcpServer.js";
+import type { YachtsySite } from "../yachtsy/YachtsySite.js";
 import type { ModelCatalogCache } from "./ModelCatalogCache.js";
 import type { RateLimiter } from "./RateLimiter.js";
 
@@ -21,6 +22,8 @@ export type McpEndpointOptions = {
   readonly ipLimiter?: RateLimiter;
   readonly apiBaseUrl: string;
   readonly packageInfo: PackageInfo;
+  /** Where printed yachtsy.ai links point; production when omitted. */
+  readonly site?: YachtsySite;
 };
 
 /**
@@ -83,6 +86,7 @@ export class McpEndpoint {
       agents,
       packageInfo: this.options.packageInfo,
       principal: credential.principal,
+      site: this.options.site,
       signal: aborted.signal,
     });
     const transport = new StreamableHTTPServerTransport({

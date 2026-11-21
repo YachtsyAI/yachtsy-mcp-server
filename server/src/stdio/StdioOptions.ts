@@ -1,8 +1,10 @@
 import { normalizeApiBaseUrl } from "../yachtsy/YachtsyApiConfig.js";
+import { YachtsySite } from "../yachtsy/YachtsySite.js";
 
 export type StdioOptions = {
   readonly apiKey: string | undefined;
   readonly apiBaseUrl: string;
+  readonly site: YachtsySite;
   readonly help: boolean;
   readonly version: boolean;
 };
@@ -15,6 +17,8 @@ Environment:
   YACHTSY_API_KEY        your Yachtsy API key (required)
   YACHTSY_API_BASE_URL   Yachtsy API base URL, ending in /v1
                          (default https://api.yachtsy.ai/v1)
+  YACHTSY_SITE_URL       where printed yachtsy.ai links point
+                         (default https://www.yachtsy.ai)
 
 Options:
   --version       print the version and exit
@@ -39,6 +43,7 @@ export function parseStdioOptions(
   return {
     apiKey: env.YACHTSY_API_KEY?.trim() || undefined,
     apiBaseUrl: normalizeApiBaseUrl(env.YACHTSY_API_BASE_URL),
+    site: YachtsySite.of(env.YACHTSY_SITE_URL),
     help,
     version,
   };

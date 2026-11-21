@@ -38,6 +38,7 @@ async function main(): Promise<void> {
     agents,
     packageInfo,
     principal: "stdio",
+    site: options.site,
   });
   await server.connect(new StdioServerTransport());
   process.stderr.write(

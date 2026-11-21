@@ -56,6 +56,7 @@ export function composeHostedServer(
         ipLimiter,
         apiBaseUrl: config.apiBaseUrl,
         packageInfo,
+        site: config.site,
       }),
   );
 

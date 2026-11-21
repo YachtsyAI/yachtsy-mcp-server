@@ -1,0 +1,71 @@
+[
+  { "name": "no signals", "listing": {}, "badges": [] },
+  {
+    "name": "within 5% reads as at market",
+    "listing": { "price_position_pct": 4.9 },
+    "badges": []
+  },
+  {
+    "name": "5% above",
+    "listing": { "price_position_pct": 5 },
+    "badges": ["5% above market"]
+  },
+  {
+    "name": "rounded below",
+    "listing": { "price_position_pct": -12.6 },
+    "badges": ["13% below market"]
+  },
+  {
+    "name": "zombie hides % vs market",
+    "listing": {
+      "staleness_tier": "zombie",
+      "price_position_pct": 37,
+      "days_on_market": 497
+    },
+    "badges": ["Possibly inactive", "Listed 497+ days"]
+  },
+  {
+    "name": "stale is not zombie",
+    "listing": { "staleness_tier": "stale", "price_position_pct": 37 },
+    "badges": ["37% above market"]
+  },
+  {
+    "name": "119 days is not long",
+    "listing": { "days_on_market": 119 },
+    "badges": []
+  },
+  {
+    "name": "120 days is long",
+    "listing": { "days_on_market": 120 },
+    "badges": ["Listed 120+ days"]
+  },
+  {
+    "name": "one cut",
+    "listing": { "price_cut_count": 1 },
+    "badges": ["1 price cut"]
+  },
+  {
+    "name": "several cuts",
+    "listing": { "price_cut_count": 3 },
+    "badges": ["3 price cuts"]
+  },
+  {
+    "name": "nulls are no signal",
+    "listing": {
+      "price_position_pct": null,
+      "days_on_market": null,
+      "price_cut_count": null,
+      "staleness_tier": null
+    },
+    "badges": []
+  },
+  {
+    "name": "all at once, in web's order",
+    "listing": {
+      "price_position_pct": 6,
+      "days_on_market": 200,
+      "price_cut_count": 2
+    },
+    "badges": ["6% above market", "Listed 200+ days", "2 price cuts"]
+  }
+]
