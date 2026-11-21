@@ -79,7 +79,7 @@ export abstract class YachtsyTool<Shape extends InputShape = InputShape> {
         : { content };
     }
     return {
-      content: [{ type: "text", text: JSON.stringify(output.json, null, 2) }],
+      content: [{ type: "text", text: JSON.stringify(output.json) }],
       structuredContent: output.structured,
     };
   }

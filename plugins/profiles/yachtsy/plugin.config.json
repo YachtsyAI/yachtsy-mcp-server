@@ -79,7 +79,7 @@
       },
       {
         "id": "segment-trend",
-        "prompt": "How have asking prices for 40 to 46 foot sailboats changed this year?",
+        "prompt": "How have asking prices for 40 to 46 foot sailboats on the US East Coast changed this year?",
         "expect": "yachtsy-segment-trend; monthly medians for the segment"
       },
       {
@@ -134,9 +134,9 @@
         "id": "segment-trend",
         "kind": "positive",
         "description": "Price trend for a segment",
-        "prompt": "How have asking prices for 40 to 46 foot sailboats changed this year?",
+        "prompt": "How have asking prices for 40 to 46 foot sailboats on the US East Coast changed this year?",
         "expected_tool": "yachtsy-segment-trend",
-        "expected_behavior": "Calls yachtsy-segment-trend for sailboats in the 40-46 band and summarises the monthly medians, citing Yachtsy."
+        "expected_behavior": "Calls yachtsy-segment-trend for the 40-46 band in us-east-coast, without a boat class, and summarises the monthly medians, citing Yachtsy."
       },
       {
         "id": "check-listing",

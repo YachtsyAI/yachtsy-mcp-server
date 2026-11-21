@@ -8,7 +8,7 @@ description: Find boats for sale that match what the user describes, with yachts
 ## Which tool
 
 - A described search ("a Catalina 34 under $80k in California", "a bluewater cutter around 40 feet"): call `yachtsy-ask` with the whole description as `prompt`.
-- Bargains ("underpriced", "good deals", "below market"): call `yachtsy-deals` with what the user gave — `boatClass`, `minLengthFt`, `maxLengthFt`, `maxPrice`, or a `model` slug from `yachtsy-find-model`.
+- Bargains ("underpriced", "good deals", "below market"): call `yachtsy-deals` with what the user gave — `region` (an id such as `us-east-coast` for Florida), `minLengthFt`, `maxLengthFt`, `maxPrice`, or a `model` slug from `yachtsy-find-model`. Leave `boatClass` out for "sailboats": every listing is one. Use it only for a class such as `catamaran` or `racer/cruiser`.
 
 ## Presenting results
 
