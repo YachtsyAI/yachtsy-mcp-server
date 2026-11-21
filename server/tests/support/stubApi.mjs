@@ -23,8 +23,8 @@ export function restoreFetch() {
   globalThis.fetch = realFetch;
 }
 
-export const json = (body, status = 200) =>
+export const json = (body, status = 200, headers = {}) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...headers },
   });

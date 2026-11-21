@@ -16,6 +16,8 @@ export type PresentationContext = {
   readonly site: YachtsySite;
   /** Listings to show in full; the rest are summarised. */
   readonly maxListings?: number;
+  /** Where the whole listings result set can be seen, when api saved it. */
+  readonly resultsUrl?: string;
 };
 
 export type Payload = Record<string, unknown> & { yachtsy_agent: string };

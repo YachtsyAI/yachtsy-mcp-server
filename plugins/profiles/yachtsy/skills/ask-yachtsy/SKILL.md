@@ -19,6 +19,7 @@ Each call stands alone: Yachtsy does not remember earlier questions. For a follo
 - Keep every listing link Yachtsy returns, next to the boat it belongs to.
 - Attribute prices and statistics to Yachtsy ("according to Yachtsy's listings data").
 - If the answer says something needs a report credit or an account, relay that message and its link as it is.
+- A big search shows only the highest-priced matches. When the answer includes a "See all on Yachtsy" link, share it: it opens every match in a sortable table with a map.
 - Do not add listings, prices or specs from general knowledge. If you add context of your own, label it clearly as not coming from Yachtsy.
 
 ## Example
