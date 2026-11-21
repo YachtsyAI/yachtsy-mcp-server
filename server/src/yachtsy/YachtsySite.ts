@@ -2,7 +2,7 @@ export const DEFAULT_YACHTSY_SITE_URL = "https://www.yachtsy.ai";
 
 /**
  * The one home of the yachtsy.ai links this server prints: where to sign up,
- * buy credits or read a report. Built from `YACHTSY_SITE_URL`, so a staging
+ * buy credits, read a report or see a full listings search. Built from `YACHTSY_SITE_URL`, so a staging
  * server prints staging links.
  */
 export class YachtsySite {
@@ -36,5 +36,10 @@ export class YachtsySite {
 
   survey(id: string): string {
     return `${this.origin}/survey/${encodeURIComponent(id)}`;
+  }
+
+  /** A saved listings result set ("See all on Yachtsy"). */
+  results(id: string): string {
+    return `${this.origin}/results/${encodeURIComponent(id)}`;
   }
 }

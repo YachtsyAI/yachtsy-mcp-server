@@ -7,6 +7,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { PackageInfo } from "../dist/PackageInfo.js";
 import { ToolPresetRegistry } from "../dist/presets/ToolPresetRegistry.js";
 import { createYachtsyMcpServer } from "../dist/YachtsyMcpServer.js";
+import { YachtsySite } from "../dist/yachtsy/YachtsySite.js";
 import {
   completion,
   LISTINGS_ANSWER,
@@ -26,7 +27,7 @@ const agents = {
 
 afterEach(restoreFetch);
 
-async function connect({ signal } = {}) {
+async function connect({ signal, site } = {}) {
   const server = createYachtsyMcpServer({
     preset: ToolPresetRegistry.yachtsy,
     api: { apiKey: KEY, apiBaseUrl: API_BASE },
@@ -34,6 +35,7 @@ async function connect({ signal } = {}) {
     packageInfo: PackageInfo.of("yachtsy-mcp", "0.0.0-test"),
     principal: "key:test",
     signal,
+    site,
   });
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: "tools-test", version: "0" });
@@ -153,6 +155,88 @@ test("yachtsy-ask refuses maxListings outside 1–25", async () => {
   });
   assert.equal(result.isError, true);
   assert.equal(calls.length, 0);
+});
+
+const RESULTS_ID = "AbCdEfGhIjKlMnOpQrSt_-";
+const bigSearch = () =>
+  completion(`Searching listings…\n\n${JSON.stringify(listingsPayload(205))}`);
+
+test("yachtsy-ask asks api for a results link sized to what it shows", async () => {
+  const calls = stubFetch(() => json(completion(PLAIN_ANSWER)));
+  const client = await connect();
+  await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "boats" },
+  });
+  await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "boats", maxListings: 5 },
+  });
+  assert.deepEqual(
+    calls.map((call) => new Headers(call.init.headers).get("prefer")),
+    ["yachtsy-results-link=10", "yachtsy-results-link=5"],
+  );
+  assert.equal(calls.length, 2);
+});
+
+test("a saved result set becomes a See-all link, first source and structured field", async () => {
+  stubFetch(() =>
+    json(bigSearch(), 200, {
+      "Yachtsy-Results-Id": RESULTS_ID,
+      "Preference-Applied": "yachtsy-results-link",
+    }),
+  );
+  const client = await connect();
+  const result = await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "Catalina 30s" },
+  });
+  const url = `https://www.yachtsy.ai/results/${RESULTS_ID}`;
+  assert.match(
+    text(result),
+    new RegExp(
+      `\\nSee all 205 on Yachtsy \\(sortable table and map\\): ${url}\\n`,
+    ),
+  );
+  assert.equal(result.structuredContent.resultsUrl, url);
+});
+
+test("no id, a malformed id, or nothing hidden means no link", async () => {
+  const client = await connect();
+  for (const headers of [{}, { "Yachtsy-Results-Id": "../../x" }]) {
+    stubFetch(() => json(bigSearch(), 200, headers));
+    const result = await client.callTool({
+      name: "yachtsy-ask",
+      arguments: { prompt: "Catalina 30s" },
+    });
+    assert.doesNotMatch(text(result), /See all/);
+    assert.equal(result.structuredContent.resultsUrl, undefined);
+  }
+  stubFetch(() =>
+    json(completion(JSON.stringify(listingsPayload(4))), 200, {
+      "Yachtsy-Results-Id": RESULTS_ID,
+    }),
+  );
+  const small = await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "Catalina 30s" },
+  });
+  assert.doesNotMatch(text(small), /See all/);
+});
+
+test("the link follows the configured site", async () => {
+  stubFetch(() => json(bigSearch(), 200, { "Yachtsy-Results-Id": RESULTS_ID }));
+  const client = await connect({
+    site: YachtsySite.of("https://staging.yachtsy.ai"),
+  });
+  const result = await client.callTool({
+    name: "yachtsy-ask",
+    arguments: { prompt: "Catalina 30s" },
+  });
+  assert.equal(
+    result.structuredContent.resultsUrl,
+    `https://staging.yachtsy.ai/results/${RESULTS_ID}`,
+  );
 });
 
 test("yachtsy-ask relays the survey paywall as text with the pricing link", async () => {

@@ -23,22 +23,34 @@ export class ListingsPresenter implements PayloadPresenter {
   present(
     payload: Payload,
     lead: string,
-    { maxListings }: PresentationContext,
+    { maxListings, resultsUrl }: PresentationContext,
   ): PresentedAnswer {
     const digest = ListingsDigest.from(payload, { maxListings });
+    const seeAll = digest.partial ? resultsUrl : undefined;
     const sources: AnswerSource[] = digest.listings
       .filter((l): l is DigestListing & { url: string } => l.url !== null)
       .map((l) => ({ title: l.title, url: l.url }));
+    if (seeAll) {
+      sources.unshift({ title: `All ${digest.total} on Yachtsy`, url: seeAll });
+    }
     const body = [
       ListingsPresenter.header(digest),
       ...digest.listings.map(ListingsPresenter.line),
+      ...(seeAll
+        ? [
+            "",
+            `See all ${digest.total} on Yachtsy (sortable table and map): ${seeAll}`,
+          ]
+        : []),
       ...ListingsPresenter.narrowing(digest),
     ].join("\n");
     return {
       text: withLead(lead, body),
       sources,
       kind: this.kind,
-      structured: digest.toJSON(),
+      structured: seeAll
+        ? { ...digest.toJSON(), resultsUrl: seeAll }
+        : digest.toJSON(),
     };
   }
 

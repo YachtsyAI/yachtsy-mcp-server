@@ -187,3 +187,27 @@ test("an unknown payload kind is shown as JSON, not dropped", () => {
   assert.match(answer.text, /```json/);
   assert.match(answer.text, /"station": "SF"/);
 });
+
+test("the See-all link only appears when some listings are hidden", () => {
+  const site = YachtsySite.production;
+  const resultsUrl = "https://www.yachtsy.ai/results/AbCdEfGhIjKlMnOpQrSt_-";
+  const big = presenter.present(JSON.stringify(listingsPayload(30)), {
+    site,
+    resultsUrl,
+  });
+  assert.deepEqual(big.sources[0], {
+    title: "All 30 on Yachtsy",
+    url: resultsUrl,
+  });
+  assert.equal(big.sources.length, 11);
+  assert.ok(
+    big.text.indexOf("See all 30 on Yachtsy") <
+      big.text.indexOf("Narrow it down"),
+  );
+  const small = presenter.present(JSON.stringify(listingsPayload(3)), {
+    site,
+    resultsUrl,
+  });
+  assert.doesNotMatch(small.text, /See all/);
+  assert.equal(small.structured.resultsUrl, undefined);
+});

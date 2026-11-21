@@ -11,6 +11,8 @@ export type YachtsyRequest = {
   readonly query?: Readonly<Record<string, string | number | undefined>>;
   /** Sent as JSON when present. */
   readonly body?: unknown;
+  /** Extra request headers, e.g. `Prefer`. */
+  readonly headers?: Readonly<Record<string, string>>;
   /** How long this call may take before it is abandoned. */
   readonly timeoutMs: number;
 };
@@ -42,6 +44,14 @@ export class YachtsyApiClient {
   }
 
   async request<T>(relativePath: string, request: YachtsyRequest): Promise<T> {
+    return (await this.requestWithHeaders<T>(relativePath, request)).body;
+  }
+
+  /** As `request`, plus the response headers (e.g. `Yachtsy-Results-Id`). */
+  async requestWithHeaders<T>(
+    relativePath: string,
+    request: YachtsyRequest,
+  ): Promise<{ body: T; headers: Headers }> {
     const signals = [AbortSignal.timeout(request.timeoutMs)];
     if (this.signal) signals.push(this.signal);
     let response: Response;
@@ -49,6 +59,7 @@ export class YachtsyApiClient {
       response = await fetch(this.url(relativePath, request.query), {
         method: request.method,
         headers: {
+          ...request.headers,
           Authorization: `Bearer ${this.config.apiKey}`,
           "User-Agent": this.userAgent,
           ...(request.body === undefined
@@ -75,6 +86,6 @@ export class YachtsyApiClient {
         describeApiFailure(response.status, body),
       );
     }
-    return body as T;
+    return { body: body as T, headers: response.headers };
   }
 }
