@@ -342,7 +342,8 @@ test("deals: 'sailboat' is no class filter, and an empty filtered page says what
     /Classes: cruiser, racer\/cruiser, catamaran, daysailer\./,
   );
   assert.match(text(result), /us-east-coast, us-gulf/);
-  assert.deepEqual(result.structuredContent, { items: [], total: 0 });
+  assert.equal(result.structuredContent.total, 0);
+  assert.match(result.structuredContent.note, /^No deals match these filters/);
 
   stubFetch(() => json({ items: [], total: 0 }));
   const unfiltered = await client.callTool({

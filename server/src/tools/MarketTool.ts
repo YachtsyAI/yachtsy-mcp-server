@@ -42,8 +42,13 @@ export abstract class MarketTool<
       const json = await this.read(args, api);
       const structured = MarketTool.structured(json);
       const note = this.note(json, args);
+      // Some clients show the model only structuredContent, so the note
+      // rides in both.
       return note
-        ? { text: `${note}\n\n${JSON.stringify(json)}`, structured }
+        ? {
+            text: `${note}\n\n${JSON.stringify(json)}`,
+            structured: { ...structured, note },
+          }
         : { json, structured };
     } catch (error) {
       if (error instanceof YachtsyApiError && error.status === 404) {
