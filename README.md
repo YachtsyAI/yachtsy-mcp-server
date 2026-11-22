@@ -38,7 +38,7 @@ YACHTSY_API_KEY=sk-… npx -y yachtsy-mcp
 
 ## Tools
 
-Five only read Yachtsy's catalog. `yachtsy-ask` runs an agent that may search the web and saves a link to its full results; none contacts sellers, makes offers, changes your account settings or spends report credits.
+Five only read Yachtsy's catalog. `yachtsy-ask` runs Yachtsy's agents and saves a link to its full results; none contacts sellers, makes offers, changes your account settings or spends report credits.
 
 | Tool | What it does |
 |---|---|
