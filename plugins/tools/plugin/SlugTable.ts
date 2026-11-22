@@ -21,7 +21,7 @@ export class SlugTable {
   static readonly ENTRIES: readonly SlugEntry[] = [
     {
       package: "yachtsy",
-      displayName: "Yachtsy",
+      displayName: "Yachtsy: Sailboats for Sale",
       serverName: "yachtsy",
       endpoint: "https://mcp.yachtsy.ai/yachtsy/mcp",
       scope: "yachtsy:read",

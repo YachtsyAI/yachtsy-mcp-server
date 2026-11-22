@@ -63,6 +63,7 @@ export class ManifestBuilder {
       name: config.name,
       version: config.version,
       description: config.description,
+      ...(config.keywords?.length ? { keywords: [...config.keywords] } : {}),
       author: { ...config.author },
       homepage: config.homepage,
       ...(config.repository ? { repository: config.repository } : {}),

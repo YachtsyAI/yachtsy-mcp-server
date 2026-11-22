@@ -8,15 +8,15 @@ import {
 } from "../tools/marketTools.js";
 import { ToolPreset } from "./ToolPreset.js";
 
-/** Yachtsy — read-only boat marketplace intelligence. */
+/** Yachtsy — read-only sailboat market intelligence. */
 const yachtsy = new ToolPreset({
   id: "yachtsy",
   path: "/yachtsy/mcp",
   serverName: "yachtsy",
-  displayName: "Yachtsy",
+  displayName: "Yachtsy: Sailboats for Sale",
   scope: "yachtsy:read",
   instructions: [
-    "Yachtsy answers yacht and sailboat questions from live marketplace data: boats for sale, what a model is worth, price trends, specs, buying advice and tides.",
+    "Yachtsy answers sailboat and sailing questions from live sailboat market data: used sailboats for sale (cruisers, racer/cruisers, catamarans, daysailers), what a model is worth, price trends, specs, buying advice and tides. Every listing is a sailboat; Yachtsy has no powerboats.",
     "Use yachtsy-ask for open questions; use yachtsy-find-model then yachtsy-model-market for a model's value, yachtsy-deals for bargains, and yachtsy-check-listing for a listing link the user shares.",
     "It is read-only. Always cite listing links. When Yachtsy has no data for something, say so instead of answering from general knowledge.",
   ].join(" "),

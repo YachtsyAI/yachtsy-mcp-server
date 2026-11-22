@@ -76,6 +76,7 @@ test("instructions say what Yachtsy covers and that it is read-only", async () =
   const client = await connect();
   assert.match(client.getInstructions(), /read-only/);
   assert.match(client.getInstructions(), /cite listing links/);
+  assert.match(client.getInstructions(), /Every listing is a sailboat/);
 });
 
 test("yachtsy-ask calls the default agent, non-streaming, with the caller's key", async () => {

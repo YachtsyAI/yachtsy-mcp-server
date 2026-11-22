@@ -3,7 +3,7 @@ name: {{skillName}}
 description: {{description}}
 ---
 
-# Get started with {{displayName}}
+# Get started with {{shortName}}
 
 {{whatItIs}}
 

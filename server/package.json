@@ -1,7 +1,7 @@
 {
   "name": "yachtsy-mcp",
-  "version": "1.2.0",
-  "description": "Yachtsy MCP server: boat listings, model valuations, deals and sailing answers from Yachtsy's marketplace data. Hosted (Streamable HTTP, OAuth) or local over stdio with an API key.",
+  "version": "1.3.0",
+  "description": "Yachtsy MCP server: search used sailboats for sale, value any sailboat model, find underpriced sailboats and price trends from Yachtsy's live sailboat market data, in ChatGPT, Claude or any MCP client. Hosted (Streamable HTTP, OAuth) or local over stdio with an API key.",
   "type": "module",
   "main": "dist/index.js",
   "module": "./src/smithery.ts",
@@ -9,7 +9,7 @@
     "yachtsy-mcp": "dist/stdio.js"
   },
   "files": ["dist", "README.md", "LICENSE"],
-  "keywords": ["mcp", "model-context-protocol", "yachtsy", "boat-listings", "sailboat", "yacht-marketplace", "chatgpt", "claude"],
+  "keywords": ["mcp", "model-context-protocol", "yachtsy", "sailboats", "sailboats-for-sale", "used-sailboats", "sailboat-prices", "sailboat-valuation", "catamarans", "yachts-for-sale", "boat-listings", "sailing", "chatgpt", "claude"],
   "publishConfig": {
     "access": "public",
     "provenance": true

@@ -1,5 +1,7 @@
 # Yachtsy MCP server
 
+Search used sailboats for sale, value any sailboat model, find underpriced sailboats and see sailboat price trends from Yachtsy's live sailboat market data, in ChatGPT, Claude or any MCP client, with every listing link cited. Yachtsy covers cruisers, racer/cruisers, catamarans and daysailers; it carries no powerboats.
+
 One codebase, two shapes:
 
 - **Hosted**: stateless Streamable HTTP with OAuth (`dist/index.js`, deployed at `mcp.yachtsy.ai`).

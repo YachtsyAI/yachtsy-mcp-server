@@ -119,7 +119,7 @@ export class ProfileLoader {
   private templateSkills(config: ProfileConfig): Skill[] {
     const shared = {
       displayName: config.interface.displayName,
-      shortName: config.interface.displayName.replace(/ by .+$/, ""),
+      shortName: config.interface.displayName.replace(/(?::| by) .+$/, ""),
       packageName: config.name,
       serverName: config.mcp.serverName,
       onboardingSkill: config.onboardingSkill,

@@ -3,9 +3,9 @@ name: {{skillName}}
 description: {{description}}
 ---
 
-# {{displayName}} status
+# {{shortName}} status
 
-Use this skill when the user asks whether {{shortName}} is connected, which Calypso team it is connected to, or what it can reach.
+Use this skill when the user asks whether {{shortName}} is connected or what it can reach.
 
 ## How to check
 
