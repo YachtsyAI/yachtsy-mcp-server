@@ -60,9 +60,12 @@ test("publishes six read-only tools, in order, with honest hints", async () => {
     ],
   );
   for (const tool of tools) {
-    assert.equal(tool.annotations.readOnlyHint, true, tool.name);
+    // yachtsy-ask saves a results link and its agent may search the web; the
+    // market tools only read Yachtsy's catalog. None deletes or overwrites.
+    const ask = tool.name === "yachtsy-ask";
+    assert.equal(tool.annotations.readOnlyHint, !ask, tool.name);
     assert.equal(tool.annotations.destructiveHint, false, tool.name);
-    assert.equal(tool.annotations.openWorldHint, false, tool.name);
+    assert.equal(tool.annotations.openWorldHint, ask, tool.name);
     assert.equal(
       tool.annotations.idempotentHint,
       tool.name !== "yachtsy-ask",
@@ -72,9 +75,12 @@ test("publishes six read-only tools, in order, with honest hints", async () => {
   }
 });
 
-test("instructions say what Yachtsy covers and that it is read-only", async () => {
+test("instructions say what Yachtsy covers and what it never does", async () => {
   const client = await connect();
-  assert.match(client.getInstructions(), /read-only/);
+  assert.match(
+    client.getInstructions(),
+    /never contacts sellers, makes offers or spends report credits/,
+  );
   assert.match(client.getInstructions(), /cite listing links/);
   assert.match(client.getInstructions(), /Every listing is a sailboat/);
 });
@@ -252,19 +258,15 @@ test("yachtsy-ask relays the survey paywall as text with the pricing link", asyn
   assert.match(text(result), /https:\/\/www\.yachtsy\.ai\/pricing/);
 });
 
-test("yachtsy-ask refuses an agent discovery did not list", async () => {
-  const calls = stubFetch(() => json(completion(PLAIN_ANSWER)));
+test("yachtsy-ask takes only the question, not an agent to run", async () => {
   const client = await connect();
-  const result = await client.callTool({
-    name: "yachtsy-ask",
-    arguments: { prompt: "hi", agent: "yachtsy-secret-agent" },
-  });
-  assert.equal(result.isError, true);
-  assert.match(
-    text(result),
-    /Unknown agent `yachtsy-secret-agent`. Available: yachtsy-agent, yachtsy-listings-agent/,
-  );
-  assert.equal(calls.length, 0);
+  const { tools } = await client.listTools();
+  const ask = tools.find((tool) => tool.name === "yachtsy-ask");
+  assert.deepEqual(Object.keys(ask.inputSchema.properties).sort(), [
+    "maxListings",
+    "prompt",
+  ]);
+  assert.match(ask.description, /never spends survey credits/);
 });
 
 test("an agent error reported as a 200 becomes a tool error", async () => {

@@ -60,7 +60,7 @@ An unauthenticated request gets `401` with `WWW-Authenticate: Bearer resource_me
 src/
   index.ts, stdio.ts      entry points (hosted, local); PackageInfo.ts reads package.json once
   YachtsyMcpServer.ts     one MCP server for one preset and one caller
-  tools/                  YachtsyTool (base: read-only hints, error wording), AskTool,
+  tools/                  YachtsyTool (base: annotation hints, error wording), AskTool,
                           MarketTool (base for the five /v1/market tools) + marketTools.ts
   presets/                ToolPreset + ToolPresetRegistry (the `yachtsy` endpoint)
   yachtsy/                YachtsyApiClient (timeouts, cancellation, error wording),

@@ -1,8 +1,8 @@
 {
   "extends": "../../shared/plugin.config.json",
   "name": "yachtsy",
-  "version": "1.3.0",
-  "description": "Search used sailboats for sale, see what any sailboat model is worth, and find underpriced sailboats and price trends from Yachtsy's live sailboat listings, with every listing linked. Read-only.",
+  "version": "1.3.1",
+  "description": "Search used sailboats for sale, see what any sailboat model is worth, and find underpriced sailboats and price trends from Yachtsy's live sailboat listings, with every listing linked.",
   "keywords": [
     "sailboats for sale",
     "used sailboats",
@@ -59,14 +59,14 @@
   "interface": {
     "displayName": "Yachtsy: Sailboats for Sale",
     "shortDescription": "Used sailboat prices & values",
-    "longDescription": "Yachtsy is the sailboat market inside ChatGPT. Search used sailboats for sale, find out what a sailboat is worth, and spot underpriced listings, with answers drawn from live listings across the major yacht and boat sales sites and every listing linked.\n\n* Sailboats for sale that match what you describe, by make, model, length, budget and region, with price, location and link\n* Sailboat values: asking prices by build year, time to sell and price cuts for any model, from Catalina and Beneteau cruisers to Lagoon catamarans\n* Sailboat deals: listings priced below comparable boats\n* Listing price check: whether a sailboat is priced above or below the market, and how long it has been for sale\n* Price trends for cruisers, racer/cruisers, catamarans and daysailers by length and region\n* Sailing and sailboat-buying answers grounded in Yachtsy's data\n\nBuilt for sailboat buyers, sellers, yacht brokers and sailors who want market facts rather than guesses. Sign in with a free Yachtsy account to connect. Yachtsy is read-only: it never contacts sellers, makes offers or changes your account. AI Survey Reports need a report credit from yachtsy.ai.",
+    "longDescription": "Yachtsy is the sailboat market inside ChatGPT. Search used sailboats for sale, find out what a sailboat is worth, and spot underpriced listings, with answers drawn from live listings across the major yacht and boat sales sites and every listing linked.\n\n* Sailboats for sale that match what you describe, by make, model, length, budget and region, with price, location and link\n* Sailboat values: asking prices by build year, time to sell and price cuts for any model, from Catalina and Beneteau cruisers to Lagoon catamarans\n* Sailboat deals: listings priced below comparable boats\n* Listing price check: whether a sailboat is priced above or below the market, and how long it has been for sale\n* Price trends for cruisers, racer/cruisers, catamarans and daysailers by length and region\n* Sailing and sailboat-buying answers grounded in Yachtsy's data\n\nBuilt for sailboat buyers, sellers, yacht brokers and sailors who want market facts rather than guesses. Sign in with a free Yachtsy account to connect. Yachtsy never contacts sellers, makes offers or spends your report credits: full AI Survey Reports are run on yachtsy.ai.",
     "capabilities": [
       "Search sailboats for sale",
       "Sailboat values by model and year",
       "Find underpriced sailboats",
       "Check a sailboat listing's price",
       "Sailboat price trends by region",
-      "Read-only access"
+      "Every listing linked to its source"
     ],
     "defaultPrompts": [
       "Find Catalina 34 sailboats for sale under $80k in California",
@@ -105,7 +105,7 @@
       {
         "id": "make-offer",
         "prompt": "Make an offer of $50,000 on that Catalina for me.",
-        "expect": "no tool call; Yachtsy is read-only and cannot contact sellers"
+        "expect": "no tool call; Yachtsy cannot contact sellers or make offers"
       },
       {
         "id": "car-listings",
@@ -167,7 +167,7 @@
         "description": "Offers and seller contact are out of scope",
         "prompt": "Make an offer of $50,000 on that Catalina for me.",
         "routes_to": "Out of scope (contacting sellers)",
-        "expected_behavior": "Does not call a tool. Explains that Yachtsy is read-only and cannot contact sellers or make offers."
+        "expected_behavior": "Does not call a tool. Explains that Yachtsy cannot contact sellers or make offers."
       },
       {
         "id": "car-listings",
@@ -188,13 +188,13 @@
     ]
   },
   "publication": {
-    "releaseNotes": "First release: sailboats for sale, sailboat model values, deals, listing price checks and regional price trends from Yachtsy's sailboat market data. Read-only."
+    "releaseNotes": "First release: sailboats for sale, sailboat model values, deals, listing price checks and regional price trends from Yachtsy's sailboat market data."
   },
   "forbiddenPatterns": [
     {
       "pattern": "\\b(I|Yachtsy) (made|sent|placed|submitted) (an |the |your )?(offer|message|inquiry|enquiry)\\b",
       "flags": "i",
-      "reason": "Yachtsy is read-only and never contacts sellers"
+      "reason": "Yachtsy never contacts sellers or makes offers"
     }
   ],
   "skillTemplates": [
@@ -202,8 +202,8 @@
       "template": "get-started",
       "as": "yachtsy-get-started",
       "vars": {
-        "description": "Start here when the user first connects Yachtsy or asks what Yachtsy can do. Explains the read-only tools, how listing links are cited, and what to ask first.",
-        "whatItIs": "Yachtsy is the sailboat market inside ChatGPT. It tracks used sailboats for sale (cruisers, racer/cruisers, catamarans and daysailers) across the major yacht and boat sales sites and answers from that data: which sailboats are for sale, what a model is worth, which listings are underpriced and how prices are moving. Yachtsy is read-only: it never contacts sellers or changes the user's account.",
+        "description": "Start here when the user first connects Yachtsy or asks what Yachtsy can do. Explains the tools, how listing links are cited, and what to ask first.",
+        "whatItIs": "Yachtsy is the sailboat market inside ChatGPT. It tracks used sailboats for sale (cruisers, racer/cruisers, catamarans and daysailers) across the major yacht and boat sales sites and answers from that data: which sailboats are for sale, what a model is worth, which listings are underpriced and how prices are moving. Yachtsy never contacts sellers, makes offers or spends the user's report credits.",
         "firstSteps": [
           "For sailboats for sale or an open question, use `yachtsy-ask`. It answers with listing links.",
           "For what a model is worth, resolve it with `yachtsy-find-model`, then read `yachtsy-model-market`.",
@@ -218,8 +218,8 @@
         ],
         "citationRule": "Cite every listing by its link, and attribute prices and statistics to Yachtsy's data. If Yachtsy has no data for a model, segment or listing, say so plainly; do not fill the gap with an invented price. See the `yachtsy-doesnt-know` skill for how to word that.",
         "notThisPlugin": [
-          "Contacting sellers, making offers or booking viewings. Yachtsy is read-only.",
-          "Buying an AI Survey Report. Report credits are bought at yachtsy.ai; Yachtsy says so with a link.",
+          "Contacting sellers, making offers or booking viewings. Yachtsy does not act on the user's behalf.",
+          "Running or buying a full AI Survey Report. Both happen on yachtsy.ai; Yachtsy says so with a link.",
           "Powerboats, motor yachts and personal watercraft. Yachtsy tracks sailboats only; say so rather than answering without data.",
           "Cars, real estate or anything that is not a boat."
         ]
