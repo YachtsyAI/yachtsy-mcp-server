@@ -211,7 +211,7 @@ describe("ForbiddenTextRule", () => {
 
   it("applies profile fences on top of the shared ones", async () => {
     const bad = Fixtures.withSkillText(view, "ask-yachtsy", "\nI made an offer on the boat.\n");
-    assert.ok((await messages(rule, bad)).some((message) => message.includes("read-only")));
+    assert.ok((await messages(rule, bad)).some((message) => message.includes("never contacts sellers")));
   });
 });
 

@@ -130,6 +130,19 @@ test("the survey paywall becomes its message and the pricing link", () => {
   assert.match(answer.text, /https:\/\/www\.yachtsy\.ai\/pricing$/);
 });
 
+test("a survey a connected assistant may not start points at yachtsy.ai", () => {
+  const answer = presenter.present(
+    JSON.stringify({
+      yachtsy_agent: "paywall",
+      reason: "survey_on_web",
+      message:
+        "Running a full AI Survey Report uses one of your report credits.",
+    }),
+  );
+  assert.equal(answer.kind, "paywall");
+  assert.match(answer.text, /\n\nhttps:\/\/www\.yachtsy\.ai$/);
+});
+
 test("a guest paywall points at signup instead", () => {
   const answer = presenter.present(
     JSON.stringify({

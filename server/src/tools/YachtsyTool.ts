@@ -18,14 +18,20 @@ export type ToolOutput =
   | { readonly json: unknown; readonly structured: Record<string, unknown> };
 
 /**
- * Every Yachtsy tool only reads. The hints a directory review checks are
- * stated outright here, once, rather than repeated (and drifting) per tool.
+ * The hints a directory review checks, stated outright rather than left to
+ * client defaults. The market tools read Yachtsy's own catalog and nothing
+ * else, so this is the default; a tool that does more overrides `hints`.
  */
-const READ_ONLY = {
+export type ToolHints = Pick<
+  ToolAnnotations,
+  "readOnlyHint" | "destructiveHint" | "openWorldHint"
+>;
+
+const READ_ONLY_CATALOG: ToolHints = {
   readOnlyHint: true,
   destructiveHint: false,
   openWorldHint: false,
-} as const;
+};
 
 /**
  * One Yachtsy tool: its public name, wording and inputs, and what it does.
@@ -40,11 +46,13 @@ export abstract class YachtsyTool<Shape extends InputShape = InputShape> {
   abstract readonly inputSchema: Shape;
   /** False only for a tool whose answer may differ on a repeat (the agent). */
   protected readonly idempotent: boolean = true;
+  /** Must match what the tool actually does; the review compares the two. */
+  protected readonly hints: ToolHints = READ_ONLY_CATALOG;
   /** First words of the error a failed call returns. */
   protected abstract readonly failure: string;
 
   get annotations(): ToolAnnotations {
-    return { ...READ_ONLY, idempotentHint: this.idempotent };
+    return { ...this.hints, idempotentHint: this.idempotent };
   }
 
   protected abstract run(

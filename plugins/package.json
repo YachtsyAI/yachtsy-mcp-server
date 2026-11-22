@@ -1,6 +1,6 @@
 {
   "name": "yachtsy-plugins",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "description": "Packages Yachtsy as a ChatGPT plugin: profiles, skills, assets and a validating, deterministic packaging tool.",
   "license": "MIT",
