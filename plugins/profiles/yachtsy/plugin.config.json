@@ -1,7 +1,7 @@
 {
   "extends": "../../shared/plugin.config.json",
   "name": "yachtsy",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Boats for sale, what a model is worth, deals and sailing answers from Yachtsy's live marketplace data, with listing links cited. Read-only.",
   "onboardingSkill": "yachtsy-get-started",
   "mcp": {
