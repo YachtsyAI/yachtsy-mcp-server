@@ -14,7 +14,7 @@ describe("ProfileLoader", () => {
     const profile = Fixtures.profile("yachtsy");
     assert.equal(profile.config.author.name, "Yachtsy AI");
     assert.equal(profile.config.interface.brandColor, "#2563EB");
-    assert.equal(profile.config.interface.displayName, "Yachtsy");
+    assert.equal(profile.config.interface.displayName, "Yachtsy: Sailboats for Sale");
     assert.deepEqual(profile.config.catalog.ownedHosts, ["yachtsy.ai", "www.yachtsy.ai", "mcp.yachtsy.ai"]);
   });
 

@@ -188,7 +188,7 @@ test("protected-resource metadata names the issuer and scope", async () => {
     authorization_servers: [ISSUER],
     scopes_supported: ["yachtsy:read"],
     bearer_methods_supported: ["header"],
-    resource_name: "Yachtsy",
+    resource_name: "Yachtsy: Sailboats for Sale",
     resource_documentation: "https://www.yachtsy.ai",
   });
 });

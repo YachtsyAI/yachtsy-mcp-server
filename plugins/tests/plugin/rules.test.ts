@@ -64,6 +64,17 @@ describe("ManifestShapeRule", () => {
     assert.ok((await messages(rule, bad)).some((message) => message.includes("MAJOR.MINOR.PATCH")));
   });
 
+  it("rejects a category the directory does not list", async () => {
+    assert.deepEqual(await messages(rule, view), []);
+    const bad = Fixtures.withManifest(view, (manifest) => (manifest.interface.category = "Shopping"));
+    assert.ok((await messages(rule, bad)).some((message) => message.includes('"interface.category" must be one of')));
+  });
+
+  it("rejects keywords that are not a list of strings", async () => {
+    const bad = Fixtures.withManifest(view, (manifest) => (manifest.keywords = ["sailboats", ""]));
+    assert.ok((await messages(rule, bad)).some((message) => message.includes('"keywords"')));
+  });
+
   it("rejects a wrong skills path and a missing interface field", async () => {
     const bad = Fixtures.withManifest(view, (manifest) => {
       manifest.skills = "skills";
@@ -350,6 +361,13 @@ describe("UrlRule", () => {
     const found = await messages(rule, bad);
     assert.ok(found.some((message) => message.includes('"example.com"')));
     assert.ok(found.some((message) => message.includes("not https")));
+  });
+
+  it("lets the manifest, and only the manifest, name a listing portal", async () => {
+    const portal = "https://www.sailboatlistings.com/view/1";
+    assert.deepEqual(await messages(rule, view), []);
+    const inSkill = Fixtures.withSkillText(view, "ask-yachtsy", `\n${portal}\n`);
+    assert.ok((await messages(rule, inSkill)).some((message) => message.includes('"www.sailboatlistings.com"')));
   });
 });
 

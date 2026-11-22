@@ -55,7 +55,7 @@ export class NamingRule implements Rule {
       for (const pattern of NamingRule.MISSPELLINGS) {
         for (const match of text.matchAll(pattern)) {
           if (!NamingRule.CANONICAL.has(match[0].replace(/[ \t]+/g, " "))) {
-            out.error(`product name spelled "${match[0]}"; use "${entry.displayName}"`, path);
+            out.error(`product name spelled "${match[0]}"; use "Yachtsy"`, path);
           }
         }
       }

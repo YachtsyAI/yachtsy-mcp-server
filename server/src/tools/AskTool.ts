@@ -37,7 +37,7 @@ export class AskTool extends YachtsyTool<typeof inputSchema> {
   readonly name = "yachtsy-ask";
   readonly title = "Ask Yachtsy";
   readonly description = [
-    "Answers boat and sailing questions from Yachtsy's live marketplace data: boats for sale, what a model is worth, specs, buying advice, tides.",
+    "Answers sailboat and sailing questions from Yachtsy's live sailboat market data: sailboats for sale, what a model is worth, specs, buying advice, tides.",
     "",
     "Use it for any yacht or sailboat question, e.g. 'Catalina 34s under $80k in California' or 'Is a 1985 Tayana 37 a good bluewater boat?'.",
     "Each call stands alone: include everything needed, including the boat a follow-up is about.",

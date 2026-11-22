@@ -68,6 +68,6 @@ export class SkillRule implements Rule {
   }
 
   private static shortName(profile: Profile): string {
-    return profile.displayName.replace(/ by .+$/, "");
+    return profile.displayName.replace(/(?::| by) .+$/, "");
   }
 }

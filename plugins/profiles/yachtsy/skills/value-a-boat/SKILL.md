@@ -1,6 +1,6 @@
 ---
 name: value-a-boat
-description: Say what a boat model is worth from Yachtsy's market data, with yachtsy-find-model then yachtsy-model-market, or yachtsy-segment-trend for a class of boat, and cite Yachtsy as the source.
+description: Say what a sailboat model is worth from Yachtsy's sailboat market data, with yachtsy-find-model then yachtsy-model-market, or yachtsy-segment-trend for a class of sailboat, and cite Yachtsy as the source.
 ---
 
 # Value a boat

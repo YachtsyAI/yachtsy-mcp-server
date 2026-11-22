@@ -8,7 +8,7 @@
   "license": "MIT",
   "interface": {
     "developerName": "Yachtsy AI",
-    "category": "Shopping",
+    "category": "Data & Analytics",
     "brandColor": "#2563EB",
     "brandColorDark": "#60A5FA",
     "composerIcon": "./assets/icon.png",
@@ -44,6 +44,9 @@
       "yachtsy.ai",
       "www.yachtsy.ai",
       "mcp.yachtsy.ai"
+    ],
+    "listingHosts": [
+      "www.sailboatlistings.com"
     ]
   },
   "forbiddenPatterns": [
@@ -61,9 +64,9 @@
       "reason": "API keys are never handled in ChatGPT; auth is OAuth"
     },
     {
-      "pattern": "\\bOctagon\\b",
+      "pattern": "\\b(Octagon|Calypso|elephant-mcp)\\b",
       "flags": "i",
-      "reason": "template leftover from the Octagon MCP server"
+      "reason": "template leftover from the projects this was derived from"
     },
     {
       "pattern": "\\b(OpenRouter|Firestore|Typesense|Snowflake|Modal|Exa)\\b",

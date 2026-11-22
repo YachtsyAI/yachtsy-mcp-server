@@ -41,7 +41,7 @@ const findModelInput = {
 /** `yachtsy-find-model`: free text → canonical boat models. */
 export class FindModelTool extends MarketTool<typeof findModelInput> {
   readonly name = "yachtsy-find-model";
-  readonly title = "Find a boat model";
+  readonly title = "Find a sailboat model";
   readonly description = [
     "Resolves a make and model typed by the user to Yachtsy's canonical boat models, with listing counts and median asking price.",
     "",
@@ -76,7 +76,7 @@ const modelMarketInput = {
 /** `yachtsy-model-market`: one model's market statistics and valuation. */
 export class ModelMarketTool extends MarketTool<typeof modelMarketInput> {
   readonly name = "yachtsy-model-market";
-  readonly title = "Model market stats";
+  readonly title = "Sailboat model value";
   readonly description = [
     "Returns one boat model's market statistics: active listings, median and quartile asking prices, prices by year, time to sell, price cuts, and Yachtsy's valuation.",
     "",
@@ -135,11 +135,11 @@ const dealsInput = {
 /** `yachtsy-deals`: listings priced below their benchmark. */
 export class DealsTool extends MarketTool<typeof dealsInput> {
   readonly name = "yachtsy-deals";
-  readonly title = "Find deals";
+  readonly title = "Find sailboat deals";
   readonly description = [
-    "Lists boats for sale priced below comparable boats, with each listing's link, price, benchmark and days on market.",
+    "Lists sailboats for sale priced below comparable boats, with each listing's link, price, benchmark and days on market.",
     "",
-    "Use it when the user wants bargains or underpriced boats. Cite the listing links.",
+    "Use it when the user wants bargains or underpriced sailboats. Cite the listing links.",
   ].join("\n");
   readonly inputSchema = dealsInput;
   protected readonly failure = "Finding deals failed.";
@@ -205,7 +205,7 @@ type SegmentArgs = ToolArgs<typeof segmentTrendInput>;
 /** `yachtsy-segment-trend`: monthly medians for a class × length × region. */
 export class SegmentTrendTool extends MarketTool<typeof segmentTrendInput> {
   readonly name = "yachtsy-segment-trend";
-  readonly title = "Segment price trend";
+  readonly title = "Sailboat price trend";
   readonly description = [
     "Returns monthly median asking prices for a boat segment: class × length band × region.",
     "",
@@ -280,7 +280,7 @@ const checkListingInput = {
 /** `yachtsy-check-listing`: price position and negotiation signals for one listing. */
 export class CheckListingTool extends MarketTool<typeof checkListingInput> {
   readonly name = "yachtsy-check-listing";
-  readonly title = "Check a listing";
+  readonly title = "Check a sailboat listing";
   readonly description = [
     "Returns price-position and negotiation signals for one listing Yachtsy tracks: price against comparable boats, days on market, price cuts, and whether the listing looks stale.",
     "",

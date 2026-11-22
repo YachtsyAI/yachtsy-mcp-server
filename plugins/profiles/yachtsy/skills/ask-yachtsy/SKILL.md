@@ -1,11 +1,11 @@
 ---
 name: ask-yachtsy
-description: Answer a boat or sailing question with yachtsy-ask, citing every listing by its link. Use for boats for sale, specs, buying advice and any open question about yachts and sailboats.
+description: Answer a sailboat, boat or sailing question with yachtsy-ask, citing every listing by its link. Use for sailboats for sale, sailboat specs and values, buying advice and any open question about sailboats and sailing yachts.
 ---
 
 # Ask Yachtsy
 
-Use `yachtsy-ask` for open questions about boats and sailing: boats for sale that match a description, what to look for in a model, whether a design suits bluewater cruising, buying advice, tides.
+Use `yachtsy-ask` for open questions about sailboats and sailing: sailboats for sale that match a description, what to look for in a model, whether a design suits bluewater cruising, buying advice, tides.
 
 ## How to call it
 

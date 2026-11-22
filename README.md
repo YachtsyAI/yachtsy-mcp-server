@@ -2,7 +2,9 @@
 
 [![smithery badge](https://smithery.ai/badge/@YachtsyAI/yachtsy-mcp-server)](https://smithery.ai/server/@YachtsyAI/yachtsy-mcp-server)
 
-**Yachtsy gives your AI the boat market.** Claude, ChatGPT, Cursor — any MCP client — can search boats for sale, value a model, find underpriced listings, check a listing's price and get sailing answers from Yachtsy's live marketplace data, with listing links cited.
+**Yachtsy gives your AI the sailboat market.** Claude, ChatGPT, Cursor — any MCP client — can search used sailboats for sale, find out what a sailboat model is worth, spot underpriced sailboats, check whether a listing is fairly priced and get sailing answers from Yachtsy's live sailboat market data, with every listing link cited.
+
+Yachtsy tracks sailboats for sale across the major yacht and boat sales sites: cruisers, racer/cruisers, catamarans and daysailers, from a Catalina 30 to a Lagoon 42. It carries no powerboats.
 
 ```text
 https://mcp.yachtsy.ai/yachtsy/mcp
@@ -10,7 +12,7 @@ https://mcp.yachtsy.ai/yachtsy/mcp
 
 ## Install
 
-Yachtsy is a hosted MCP server. Give your client the URL above; it opens a Yachtsy sign-in, you press Allow. No download, no key to paste. *(Until OAuth sign-in is live, the hosted endpoint accepts a Yachtsy API key as a bearer token.)*
+Yachtsy is a hosted MCP server. Give your client the URL above; it opens a Yachtsy sign-in, you press Allow. No download, no key to paste. Clients without OAuth can send a Yachtsy API key as a bearer token instead.
 
 | Client | How |
 |---|---|
@@ -40,11 +42,11 @@ All six only read. None writes to your account.
 
 | Tool | What it does |
 |---|---|
-| `yachtsy-ask` | Answers any boat or sailing question through Yachtsy's agents (listings, valuations, specs, buying advice, tides), citing listing links. Listing searches show the 10 highest-priced matches with market badges, a summary of the rest and a link to see them all on Yachtsy |
+| `yachtsy-ask` | Answers any sailboat or sailing question through Yachtsy's agents (listings, valuations, specs, buying advice, tides), citing listing links. Listing searches show the 10 highest-priced matches with market badges, a summary of the rest and a link to see them all on Yachtsy |
 | `yachtsy-find-model` | Resolves "Catalina 30" to Yachtsy's canonical model, with listing count and median price |
 | `yachtsy-model-market` | One model's market: prices by year, time to sell, price cuts, Yachtsy's valuation |
-| `yachtsy-deals` | Listings priced below comparable boats, by class, region, length, price or model |
-| `yachtsy-segment-trend` | Monthly median prices for a length band × region, per class or for every class with data |
+| `yachtsy-deals` | Sailboats priced below comparable boats, by class, region, length, price or model |
+| `yachtsy-segment-trend` | Monthly median sailboat prices for a length band × region, per class or for every class with data |
 | `yachtsy-check-listing` | Price position and negotiation signals for one listing link Yachtsy tracks |
 
 Signed-up accounts get the Yachtsy Agent without limits; AI Survey Reports need a report credit, and the tool says so with a link instead of answering.

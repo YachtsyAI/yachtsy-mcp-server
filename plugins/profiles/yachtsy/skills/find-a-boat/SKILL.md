@@ -1,6 +1,6 @@
 ---
 name: find-a-boat
-description: Find boats for sale that match what the user describes, with yachtsy-ask for open searches and yachtsy-deals for bargains, citing each listing by its link.
+description: Find sailboats for sale (cruisers, racer/cruisers, catamarans, daysailers) that match what the user describes, with yachtsy-ask for open searches and yachtsy-deals for bargains, citing each listing by its link.
 ---
 
 # Find a boat
@@ -21,4 +21,5 @@ description: Find boats for sale that match what the user describes, with yachts
 ## What Yachtsy does not do
 
 - It does not contact sellers or check a boat's condition in person.
+- It tracks sailboats only. For a powerboat or motor yacht, say Yachtsy has no listings for it.
 - It does not search portals Yachtsy does not track; follow the `yachtsy-doesnt-know` skill when a search comes back empty.

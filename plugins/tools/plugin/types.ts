@@ -103,6 +103,11 @@ export interface Catalog {
   readonly canonicalTools: readonly string[];
   /** Hosts a package may link to. */
   readonly ownedHosts: readonly string[];
+  /**
+   * Listing portals the manifest may name, so the check-listing review case
+   * can use a real tracked listing. Skills still link only to owned hosts.
+   */
+  readonly listingHosts?: readonly string[];
 }
 
 export interface SkillTemplateUse {
@@ -117,6 +122,8 @@ export interface ProfileConfig {
   readonly name: string;
   readonly version: string;
   readonly description: string;
+  /** Directory search terms (top-level `keywords`). */
+  readonly keywords?: readonly string[];
   readonly author: Author;
   readonly homepage: string;
   readonly repository?: string;

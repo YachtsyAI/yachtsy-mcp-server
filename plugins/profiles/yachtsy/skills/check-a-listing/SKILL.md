@@ -1,6 +1,6 @@
 ---
 name: check-a-listing
-description: Tell the user whether a boat listing they share is well priced, with yachtsy-check-listing, citing the listing link and Yachtsy's comparable-boat benchmark.
+description: Tell the user whether a sailboat or boat listing they share is well priced, with yachtsy-check-listing, citing the listing link and Yachtsy's comparable-boat benchmark.
 ---
 
 # Check a listing

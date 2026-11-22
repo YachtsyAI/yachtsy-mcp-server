@@ -30,6 +30,25 @@ export class ManifestShapeRule implements Rule {
     "termsOfServiceURL",
   ];
   private static readonly INTERFACE_LISTS = ["capabilities", "defaultPrompt"];
+  /**
+   * The directory's category titles (plugin_category_unknown). "Shopping" is
+   * not one: it uploaded, then failed the portal's metadata check.
+   */
+  static readonly CATEGORIES = [
+    "Productivity",
+    "Creativity",
+    "Developer Tools",
+    "Business & Operations",
+    "Data & Analytics",
+    "Communication",
+    "Education & Research",
+    "Security",
+    "Finance",
+    "Healthcare",
+    "Travel",
+    "Entertainment",
+    "Other",
+  ];
   /** All four are required for an MCP review. */
   private static readonly URL_FIELDS = ["websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"];
 
@@ -64,6 +83,10 @@ export class ManifestShapeRule implements Rule {
     if (manifest.mcpServers !== ManifestBuilder.MCP_SERVERS_PATH) {
       out.error(`"mcpServers" must be "${ManifestBuilder.MCP_SERVERS_PATH}"`, path);
     }
+    const keywords = manifest.keywords;
+    if (keywords !== undefined && (!Array.isArray(keywords) || !keywords.every(ManifestShapeRule.nonEmpty))) {
+      out.error(`"keywords" must be a list of non-empty strings`, path);
+    }
     const author = manifest.author as Record<string, unknown> | undefined;
     if (!author || !ManifestShapeRule.nonEmpty(author.name)) out.error(`"author.name" is required`, path);
 
@@ -79,6 +102,9 @@ export class ManifestShapeRule implements Rule {
         if (!Array.isArray(list) || list.length === 0 || !list.every(ManifestShapeRule.nonEmpty)) {
           out.error(`"interface.${field}" must be a non-empty list of strings`, path);
         }
+      }
+      if (typeof ui.category === "string" && !ManifestShapeRule.CATEGORIES.includes(ui.category)) {
+        out.error(`"interface.category" must be one of ${ManifestShapeRule.CATEGORIES.join(", ")}; got "${ui.category}"`, path);
       }
       for (const field of ManifestShapeRule.URL_FIELDS) {
         const value = ui[field];
