@@ -60,7 +60,7 @@ test("publishes six read-only tools, in order, with honest hints", async () => {
     ],
   );
   for (const tool of tools) {
-    // yachtsy-ask saves a results link and its agent may search the web; the
+    // yachtsy-ask saves a results link and draws on third-party sites; the
     // market tools only read Yachtsy's catalog. None deletes or overwrites.
     const ask = tool.name === "yachtsy-ask";
     assert.equal(tool.annotations.readOnlyHint, !ask, tool.name);

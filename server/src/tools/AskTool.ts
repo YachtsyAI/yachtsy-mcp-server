@@ -43,15 +43,16 @@ export class AskTool extends YachtsyTool<typeof inputSchema> {
     `Listing searches show the ${DEFAULT_MAX_LISTINGS} highest-priced matches with Yachtsy's market badges, then price and year ranges and counts by location, build year and price for the rest. Narrow with a location, year range or price to see others.`,
     "Always cite the listing links in the answer. If the answer says something needs credits or an account, relay it with its link.",
     "",
-    "Side effects: it may search the public web for listings, and a listings search saves its full result list behind an unlisted yachtsy.ai link that expires after 30 days. It never spends survey credits: a full AI Survey Report not already unlocked is run on yachtsy.ai instead. It never contacts sellers or changes the user's account settings.",
+    "Side effects: a listings search saves its full result list behind an unlisted yachtsy.ai link that expires after 30 days. It never spends survey credits: a full AI Survey Report not already unlocked is run on yachtsy.ai instead. It never contacts sellers or changes the user's account settings.",
   ].join("\n");
   readonly inputSchema = inputSchema;
   protected readonly idempotent = false;
   /**
    * Not read-only: a search saves a results link, and a survey of a boat the
-   * user already unlocked runs and stores a report. Open-world: the listings
-   * agent may search the public web. Not destructive: it deletes and
-   * overwrites nothing, and api never lets an OAuth caller spend a credit.
+   * user already unlocked runs and stores a report. Open-world: answers can
+   * draw on third-party listing sites, not only Yachtsy's catalog. Not
+   * destructive: it deletes and overwrites nothing, and api never lets an
+   * OAuth caller spend a credit.
    */
   protected readonly hints: ToolHints = {
     readOnlyHint: false,

@@ -1,6 +1,6 @@
 {
   "name": "yachtsy-mcp",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Yachtsy MCP server: search used sailboats for sale, value any sailboat model, find underpriced sailboats and price trends from Yachtsy's live sailboat market data, in ChatGPT, Claude or any MCP client. Hosted (Streamable HTTP, OAuth) or local over stdio with an API key.",
   "type": "module",
   "main": "dist/index.js",
